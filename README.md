@@ -14,3 +14,6 @@ Dev 환경 진단·재구축으로 표준 정립 → Stage/Live 적용 → Live 
 4. [Live 환경 적용 계획](./network-firewall/04-live-environment-migration-plan.md) — Network Firewall 리소스 자체가 없던 Live 환경에 신규로 도입하는 계획. Stage보다 더 많은 외부 연결(VPC Peering)을 고려해야 했다.
 5. [Live 방화벽 인라인 전환 시도와 롤백](./network-firewall/05-live-cutover-attempt-and-rollback.md) — Live 적용 계획을 실제 트래픽 위에서 실행한 컷오버 시도. 점검 당일 원인 불명 장애가 겹쳐, 안전을 우선해 방화벽 라우팅만 롤백하고 점검을 종료했다.
 6. [Stage 환경 표준 적용 이후 운영 개선](./network-firewall/06-stage-infra-improvement.md) — 표준 적용 후 Stage를 운영하며 드러난 후속 문제 세 가지(배포 경로 정리, 방화벽 규칙 평가 순서 결함, ALB 서브넷 분리)를 다뤘다.
+
+### [2407-dlp-adoption](./2407-dlp-adoption/) — DLP 솔루션 도입 평가
+후보 조사 → 1차 정량 평가 → 평가 방법론 자체 검증·개정 → 상위 후보 재검증(PoC) → 가격 대비 종합 판단으로 최종 선정
