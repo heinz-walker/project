@@ -23,3 +23,6 @@ Dev 환경 진단·재구축으로 표준 정립 → Stage/Live 적용 → Live 
 
 ### [automation/2606-cloud-risk-assessment](./automation/2606-cloud-risk-assessment/) — 클라우드 위험평가 자동화
 위험평가 산식(R=A×T×V)의 자산가치 근거인 클라우드 자산대장 정비 → 취약성 평가를 boto3 읽기 전용 자동화 도구로 자체 개발 → 자동 산정 결과와 정식 위험평가 보고서 체계의 정합성 점검
+
+### [automation/2512-security-awareness-training](./automation/2512-security-awareness-training/) — 인터랙티브 사내 정보보안 교육 웹앱
+문서·슬라이드 배포 대신 실습·퀴즈로 진행하는 인터랙티브 교육을 Google Apps Script + HTML/CSS/JS로 개발 · [인터랙티브 데모](https://heinz-walker.github.io/project/security-training/)

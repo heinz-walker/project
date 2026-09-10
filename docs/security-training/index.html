@@ -1,0 +1,3045 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>임직원 정보보안 교육</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Rajdhani:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & Base */
+    body { margin: 0; padding: 0; background-color: #f1f5f9; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #0f172a; }
+    img { display: block; border: 0; }
+    a { text-decoration: none; }
+    * { box-sizing: border-box; }
+
+    /* Layout Container */
+    .main-container {
+      width: 100%;
+      max-width: 760px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 24px;
+      overflow: visible;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Accordion Styles */
+    .accordion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 0 32px;
+    }
+    
+    .accordion-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      background-color: #ffffff;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    
+    .accordion-item.completed {
+      border-color: #bbf7d0;
+      background-color: #f0fdf4;
+    }
+
+    .accordion-header {
+      padding: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.2s;
+    }
+    .accordion-header:hover {
+      background-color: #f8fafc;
+    }
+    .accordion-item.completed .accordion-header {
+      background-color: #f0fdf4;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .chapter-icon { width: 40px; height: 40px; border-radius: 10px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .chapter-info { display: flex; flex-direction: column; }
+    .chapter-title { font-size: 16px; font-weight: bold; color: #0f172a; margin-bottom: 2px; }
+    .chapter-desc { font-size: 13px; color: #64748b; }
+
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .status-badge { 
+      font-size: 12px; font-weight: bold; padding: 4px 10px; border-radius: 20px; 
+      background: #e2e8f0; color: #64748b; transition: all 0.3s;
+    }
+    .accordion-item.completed .status-badge {
+      background: #dcfce7; color: #166534;
+    }
+    .arrow-icon { font-size: 12px; color: #94a3b8; transition: transform 0.3s; }
+    .accordion-item.open .arrow-icon { transform: rotate(180deg); }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out;
+      background-color: #ffffff;
+      border-top: 1px solid transparent;
+    }
+    .accordion-item.open .accordion-content {
+      border-top-color: #e2e8f0;
+    }
+    .content-inner { padding: 24px; }
+    .accordion-content .content-inner p { font-size:14px; line-height:1.6; color:#475569; }
+    .accordion-content .content-inner ul { padding-left:18px; }
+    .accordion-content .content-inner ul li { font-size:14px; line-height:1.6; color:#475569; }
+
+    /* Utility & Components */
+    .bg-blue-box { background:#f0f9ff; border:1px solid #dbeafe; border-radius:6px; padding:10px; font-size:13px; color:#0f172a; }
+    
+    .guide-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 8px; font-size: 12px; color: #0ea5e9; font-weight: bold; text-decoration: none;
+      transition: color 0.2s;
+    }
+    .guide-link:hover { text-decoration: underline; color: #0284c7; }
+
+    .policy-table {
+      width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px;
+    }
+    .policy-table th, .policy-table td {
+      border: 1px solid #e2e8f0; padding: 10px; text-align: left; vertical-align: middle;
+    }
+    .policy-table th { background: #f8fafc; color: #475569; font-weight: bold; width: 30%; }
+    .policy-table td { color: #334155; }
+
+    /* Zoom Cards (Remote & Physical) */
+    .zoom-grid {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;
+      align-items: flex-start;
+      justify-content: center;
+      overflow: visible;
+      position: relative;
+    }
+    .zoom-grid.clean-grid { padding-bottom: 32px; }
+    .zoom-card {
+      flex: 1; min-width: 180px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+      cursor: default;
+    }
+    .zoom-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.15);
+      border-color: #cbd5e1;
+      z-index: 10;
+    }
+    .zoom-card-icon { font-size: 24px; margin-bottom: 8px; }
+    .zoom-card-title { font-weight: bold; font-size: 14px; color: #0f172a; margin-bottom: 6px; }
+    .zoom-card-desc { font-size: 12px; color: #64748b; line-height: 1.5; }
+    .clean-box-grid { display:flex; flex-wrap:wrap; gap:12px; }
+    .clean-box {
+      flex:1 1 320px;
+      background:#ffffff;
+      border:1px solid #e2e8f0;
+      border-radius:12px;
+      padding:14px;
+      box-shadow:0 12px 24px -18px rgba(0,0,0,0.12);
+    }
+    .clean-box .clean-box-head { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .clean-box .clean-box-icon {
+      width:36px; height:36px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px; font-weight:900; color:#0f172a;
+    }
+    .clean-box .clean-box-title { font-weight:900; color:#0f172a; font-size:14px; }
+    .clean-box .clean-box-desc { font-size:12px; color:#475569; line-height:1.5; margin-bottom:8px; }
+    .clean-title-row { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0; }
+    .clean-title-card {
+      flex:1 1 240px;
+      background:#0f172a;
+      color:#e2e8f0;
+      border-radius:12px;
+      padding:10px 12px;
+      box-shadow:0 12px 24px -18px rgba(15,23,42,0.45);
+      border:1px solid #1e293b;
+      font-weight:900;
+      font-size:13px;
+    }
+    .env-quiz {
+      background:linear-gradient(135deg,#ffffff 0%, #f8fafc 100%);
+      border:1px solid #e2e8f0;
+      border-radius:14px;
+      padding:14px;
+      box-shadow:0 10px 24px -18px rgba(15,23,42,0.15);
+    }
+    .env-quiz-title {
+      display:flex; align-items:center; gap:8px;
+      font-weight:900; color:#0f172a; font-size:14px; margin-bottom:10px;
+    }
+    .env-quiz-body { display:flex; flex-direction:column; gap:12px; }
+    .env-quiz-label { font-size:12px; color:#0f172a; font-weight:800; margin-bottom:6px; }
+    .env-quiz-input {
+      width:16%;
+      min-width:80px;
+      padding:8px 10px;
+      border:1px solid #e2e8f0;
+      border-radius:8px;
+      font-size:12px;
+      color:#0f172a;
+      background:#f8fafc;
+    }
+    .env-quiz-chip { background:#e2e8f0; color:#0f172a; padding:6px 10px; border-radius:999px; font-weight:800; font-size:11px; }
+    .env-quiz-radios { display:flex; gap:10px; }
+    .env-quiz-radios label { font-size:12px; color:#475569; display:flex; align-items:center; gap:4px; }
+    .env-quiz-actions { display:flex; gap:8px; align-items:center; margin-top:4px; }
+    .env-quiz-btn {
+      background:linear-gradient(135deg,#0ea5e9,#2563eb);
+      color:#fff; border:none; border-radius:8px; padding:10px 14px;
+      font-weight:800; font-size:13px; cursor:pointer;
+      box-shadow:0 12px 24px -16px rgba(37,99,235,0.45);
+    }
+    .env-quiz-result { font-size:12px; font-weight:800; color:#475569; }
+    .clean-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+      color: #475569;
+      background: linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(240,244,255,0.9) 100%);
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+      table-layout: fixed;
+    }
+    .clean-table td {
+      padding: 6px 8px;
+      vertical-align: top;
+      border-bottom: 1px solid #e2e8f0;
+      background: #fff;
+      text-align: left;
+      font-size: 12px;
+    }
+    .clean-table tr:nth-child(odd) td { background: #f8fafc; }
+    .clean-table tr:last-child td { border-bottom: none; }
+    .clean-table .num {
+      width: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+
+    /* Psychology Grid */
+    .psy-grid { 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 12px; 
+      justify-content: center; 
+      margin-top: 12px; 
+      align-items: center;
+    }
+    .psy-card {
+      flex: 0 0 30%; 
+      min-width: 200px; 
+      max-width: 240px;
+      min-height: 100px; /* Ensure consistent initial height */
+      padding: 16px; 
+      border-radius: 12px;
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      text-align: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s; 
+      cursor: default; 
+      position: relative; 
+      background: #fff;
+    }
+    .psy-card:hover { transform: scale(0.97); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); z-index: 10; }
+    .psy-card .header { display:flex; flex-direction:column; align-items:center; gap:6px; width:100%; justify-content:center; }
+    .psy-card .icon { font-size:16px; line-height:1; }
+    .psy-card .title { font-weight:bold; font-size:18px; line-height:1.2; display:flex; flex-direction:column; align-items:center; gap:2px; }
+    .psy-card .title .title-en { font-size:12px; font-weight:600; color:#64748b; }
+    
+    .psy-card .desc { 
+      max-height: 0; opacity: 0; overflow: hidden; transition: all 0.3s; 
+      font-size: 13px; line-height: 1.6; color: #475569; margin-top: 0; width: 100%; text-align: left;
+    }
+    .psy-card:hover .desc { max-height: 300px; opacity: 1; margin-top: 10px; padding-top:10px; border-top:1px solid rgba(0,0,0,0.05); }
+
+    /* Wi-Fi Cards */
+    .wifi-card { flex:1; min-width:200px; border-radius:12px; padding:14px; cursor:default; transition: all 0.2s; }
+    .wifi-card:hover { transform: scale(1.03); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    .wifi-desc { display:none; margin-top:8px; padding-top:8px; border-top:1px solid rgba(0,0,0,0.1); font-size:11px; line-height:1.4; }
+    .wifi-card:hover .wifi-desc { display:block; }
+
+    /* Privacy Section */
+    .privacy-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap:12px;
+      margin:12px 0 16px;
+    }
+    .privacy-card {
+      padding:14px;
+      border:1px solid #e2e8f0;
+      border-radius:12px;
+      background:#ffffff;
+      transition: all 0.25s ease;
+      box-shadow:0 2px 4px rgba(0,0,0,0.02);
+    }
+    .privacy-card:hover { transform: translateY(-3px); box-shadow:0 10px 20px -8px rgba(0,0,0,0.12); }
+    .privacy-card .title { font-weight:700; font-size:14px; margin-bottom:6px; color:#0f172a; }
+    .privacy-card .desc { font-size:13px; color:#475569; line-height:1.6; }
+    .privacy-card .tag { display:inline-block; padding:4px 8px; border-radius:999px; font-size:11px; font-weight:700; margin-bottom:8px; }
+    .privacy-card .tag.good { background:#ecfdf3; color:#166534; }
+    .privacy-card .tag.bad { background:#fef2f2; color:#b91c1c; }
+
+    .privacy-check {
+      margin-top:8px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .privacy-toggle {
+      flex:1 1 180px;
+      border:1px solid #e2e8f0;
+      border-radius:10px;
+      padding:12px;
+      background:#f8fafc;
+      cursor:pointer;
+      transition:all 0.2s;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-size:13px;
+      color:#0f172a;
+    }
+    .privacy-toggle:hover { border-color:#cbd5e1; }
+    .privacy-toggle.active {
+      background:linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color:#ffffff;
+      border-color:#16a34a;
+      box-shadow:0 10px 18px -8px rgba(22,163,74,0.4);
+    }
+    .privacy-toggle .privacy-toggle-state { font-weight:700; font-size:12px; color:#0ea5e9; }
+    .privacy-toggle.active .privacy-toggle-state { color:#ffffff; }
+
+    /* Reusable quick-check toggles */
+    .check-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+    .check-toggle {
+      border:1px solid #e2e8f0;
+      border-radius:10px;
+      padding:12px;
+      background:#f8fafc;
+      cursor:pointer;
+      transition:all 0.2s;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-size:13px;
+      color:#0f172a;
+    }
+    .check-toggle:hover { border-color:#cbd5e1; }
+    .check-toggle.active {
+      background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color:#ffffff;
+      border-color:#2563eb;
+      box-shadow:0 10px 18px -8px rgba(37,99,235,0.35);
+    }
+    .check-toggle .check-toggle-state { font-weight:700; font-size:12px; color:#0ea5e9; }
+    .check-toggle.active .check-toggle-state { color:#ffffff; }
+
+    /* Phishing lab */
+    .mail-lab {
+      margin-top:16px;
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      border-radius:12px;
+      padding:14px;
+    }
+    .mail-lab-title { font-weight:700; font-size:15px; color:#0f172a; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+    .mail-table {
+      width:100%;
+      border-collapse:collapse;
+      background:#ffffff;
+      border:1px solid #e2e8f0;
+      border-radius:10px;
+      overflow:hidden;
+    }
+    .mail-table thead th {
+      background:#e2e8f0;
+      color:#0f172a;
+      font-size:13px;
+      font-weight:700;
+      padding:8px 10px;
+      border:1px solid #dbeafe;
+      text-align:left;
+    }
+    .mail-table tbody td {
+      border:1px solid #e2e8f0;
+      padding:6px 8px;
+      font-size:13px;
+      color:#0f172a;
+      vertical-align:middle;
+    }
+    .mail-summary { cursor:pointer; }
+    .mail-summary:hover { background:#f8fafc; }
+    .mail-title-btn {
+      border:none;
+      background:none;
+      padding:0;
+      margin:0;
+      text-align:left;
+      cursor:pointer;
+      font-size:13px;
+      color:#0f172a;
+      font-weight:700;
+      width:100%;
+    }
+    .mail-title-btn:hover { color:#0ea5e9; }
+    .mail-actions-inline {
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:6px;
+      flex-wrap:wrap;
+    }
+    .mail-toggle {
+      min-width:64px;
+      border:1px solid #e2e8f0;
+      background:#f8fafc;
+      border-radius:8px;
+      padding:6px 8px;
+      cursor:pointer;
+      font-size:13px;
+      color:#0f172a;
+      transition:all 0.2s;
+      text-align:center;
+      font-weight:700;
+    }
+    .mail-toggle.spam-safe { background:#ecfdf3; border-color:#86efac; color:#166534; }
+    .mail-toggle.spam-unsafe { background:#fef2f2; border-color:#fecaca; color:#b91c1c; }
+    .mail-toggle:hover { border-color:#cbd5e1; }
+    .mail-body {
+      display:none;
+      background:#f8fafc;
+      font-size:13px;
+      color:#475569;
+      line-height:1.6;
+    }
+    .mail-body.open { display:table-row; }
+    .mail-result {
+      margin-top:8px;
+      font-size:13px;
+      font-weight:700;
+      color:#0f172a;
+    }
+    .quiz-submit {
+      background:linear-gradient(135deg,#0f172a,#1e293b);
+      color:#ffffff;
+      border:none;
+      border-radius:10px;
+      padding:10px 16px;
+      font-size:14px;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:0 10px 24px -14px rgba(15,23,42,0.6);
+      transition:transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .quiz-submit:hover { transform:translateY(-1px); box-shadow:0 12px 28px -12px rgba(15,23,42,0.65); }
+    .ox-quiz {
+      margin-top:14px;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      border-radius:12px;
+      padding:16px;
+      box-shadow:0 10px 24px -20px rgba(234,88,12,0.5);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      overflow:visible;
+    }
+    .ox-quiz .quiz-question {
+      margin-bottom: 6px;
+      font-size: 15px;
+      text-align: left;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #fef3c7;
+    }
+    .ox-quiz .quiz-choices {
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+      margin:6px 0 10px;
+    }
+    .quiz-question {
+      font-size:13px;
+      color:#92400e;
+      margin-bottom:8px;
+      font-weight:700;
+      line-height:1.6;
+      white-space:normal;
+      word-break:keep-all;
+    }
+    .quiz-choice {
+      padding:8px 12px;
+      border:1px solid #c2410c;
+      background:#fff;
+      color:#c2410c;
+      border-radius:8px;
+      font-weight:800;
+      cursor:pointer;
+      min-width:42px;
+    }
+    .quiz-choice.selected {
+      background:#c2410c;
+      color:#fff;
+      box-shadow:0 6px 16px -10px rgba(194,65,12,0.8);
+    }
+    .celebrate-modal {
+      display:none;
+      position:fixed; inset:0;
+      background:rgba(15,23,42,0.75);
+      z-index:12000;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+    .celebrate-modal.active { display:flex; animation:fadeIn 0.25s ease; }
+    .celebrate-card {
+      position:relative;
+      background:linear-gradient(135deg,#0ea5e9,#22c55e);
+      color:#0f172a;
+      padding:22px 24px;
+      border-radius:16px;
+      box-shadow:0 20px 60px rgba(15,23,42,0.4);
+      overflow:hidden;
+      min-width:280px;
+      max-width:360px;
+      text-align:center;
+      animation:pop 0.4s ease;
+    }
+    .celebrate-title { font-weight:900; font-size:18px; margin:6px 0 2px; color:#0f172a; }
+    .celebrate-sub { margin:0 0 12px; font-size:13px; color:#0f172a; }
+    .celebrate-emoji { font-size:36px; animation:floaty 1.6s ease-in-out infinite; }
+    .celebrate-close {
+      background:#0f172a;
+      color:#fff;
+      border:none;
+      border-radius:10px;
+      padding:10px 14px;
+      font-weight:800;
+      cursor:pointer;
+      margin-top:4px;
+      width:100%;
+    }
+    .celebrate-confetti span {
+      position:absolute;
+      width:10px; height:18px;
+      border-radius:3px;
+      opacity:0.9;
+      animation:fall 1s ease forwards;
+    }
+    .celebrate-confetti span:nth-child(1){background:#f97316; left:10%; top:-10%; animation-duration:1.1s;}
+    .celebrate-confetti span:nth-child(2){background:#facc15; left:30%; top:-12%; animation-duration:1.25s;}
+    .celebrate-confetti span:nth-child(3){background:#a855f7; left:50%; top:-15%; animation-duration:1s;}
+    .celebrate-confetti span:nth-child(4){background:#22c55e; left:70%; top:-13%; animation-duration:1.15s;}
+    .celebrate-confetti span:nth-child(5){background:#0ea5e9; left:85%; top:-16%; animation-duration:1.05s;}
+    .celebrate-confetti span:nth-child(6){background:#fb7185; left:40%; top:-18%; animation-duration:1.2s;}
+    @keyframes pop {
+      0% { transform:scale(0.85); opacity:0; }
+      60% { transform:scale(1.05); opacity:1; }
+      100% { transform:scale(1); opacity:1; }
+    }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes floaty { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
+    @keyframes fall {
+      0% { transform:translateY(0) rotate(0deg); opacity:1; }
+      100% { transform:translateY(160px) rotate(160deg); opacity:0; }
+    }
+    .mail-modal {
+      display:none;
+      position:fixed; inset:0;
+      background:rgba(15,23,42,0.45);
+      z-index:9999;
+      align-items:center;
+      justify-content:center;
+      padding:12px;
+      pointer-events:auto;
+      overflow-y:auto;
+    }
+    .mail-modal.active { display:flex; }
+    .mail-modal-card {
+      background:linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border-radius:18px;
+      padding:24px;
+      max-width:640px;
+      width:100%;
+      box-shadow:0 18px 38px -18px rgba(0,0,0,0.35);
+      border:1px solid #e2e8f0;
+      pointer-events:auto;
+    }
+    .mail-modal-header {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:8px;
+    }
+    .mail-avatar {
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      background:linear-gradient(135deg, #93c5fd, #3b82f6);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      font-size:16px;
+    }
+    .mail-meta {
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .mail-meta .from { font-size:16px; font-weight:800; color:#0f172a; }
+    .mail-meta .subject { font-size:14px; font-weight:700; color:#1f2937; }
+    .mail-meta .to { font-size:12px; color:#64748b; }
+    .mail-modal-body {
+      margin-top:8px;
+      padding-top:10px;
+      border-top:1px solid #e2e8f0;
+      font-size:13px;
+      color:#111827;
+      line-height:1.6;
+      white-space:pre-line;
+    }
+    .mail-modal-close {
+      margin-top:16px;
+      text-align:right;
+    }
+    .mail-modal-close button {
+      background:#0f172a;
+      color:#fff;
+      border:none;
+      border-radius:10px;
+      padding:10px 16px;
+      cursor:pointer;
+      font-size:13px;
+      font-weight:700;
+    }
+    /* Link warning modal */
+    .link-warning-overlay {
+      display:none; position:fixed; inset:0;
+      background:rgba(15,23,42,0.7);
+      z-index:10000; align-items:center; justify-content:center;
+      padding:16px;
+    }
+    .link-warning-overlay.active { display:flex; }
+    .link-warning-card {
+      background:linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border-radius:18px;
+      border:1px solid #e2e8f0; max-width:420px; width:100%;
+      padding:20px 18px;
+      box-shadow:0 22px 48px -18px rgba(0,0,0,0.4);
+      text-align:center;
+    }
+    .link-warning-icon {
+      width:64px; height:64px; border-radius:50%;
+      background:linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+      color:#fff; display:flex; align-items:center; justify-content:center;
+      font-size:26px; font-weight:900; margin:0 auto 10px;
+      box-shadow:0 10px 25px -12px rgba(239,68,68,0.55);
+    }
+    .link-warning-title { font-weight:900; font-size:16px; color:#b91c1c; margin-bottom:8px; }
+    .link-warning-body { font-size:13px; color:#0f172a; line-height:1.55; margin-bottom:12px; white-space:pre-line; }
+    .link-warning-form { display:flex; flex-direction:column; gap:8px; margin:10px 0; }
+    .link-warning-form input {
+      width:100%; padding:10px 12px; border:1px solid #e2e8f0;
+      border-radius:8px; font-size:13px; color:#0f172a;
+      background:#f8fafc;
+    }
+    .link-warning-form button {
+      width:100%; margin-top:4px;
+    }
+    .link-warning-card button {
+      background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color:#fff; border:none;
+      padding:11px 16px; border-radius:10px; cursor:pointer;
+      font-weight:800; font-size:13px;
+      box-shadow:0 12px 24px -12px rgba(15,23,42,0.6);
+    }
+
+    /* Fake auth overlay */
+    .fake-auth-overlay {
+      display:none; position:fixed; inset:0;
+      background:rgba(15,23,42,0.55);
+      z-index:10000; align-items:center; justify-content:center;
+      padding:16px;
+    }
+    .fake-auth-overlay.active { display:flex; }
+    .fake-auth-card {
+      background:#ffffff;
+      border:1px solid #e2e8f0;
+      border-radius:14px;
+      padding:22px;
+      width:100%; max-width:1260px; /* 3x larger */
+      box-shadow:0 18px 40px -18px rgba(0,0,0,0.4);
+    }
+    .fake-auth-header { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .fake-auth-iframe-wrap { border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; height:80vh; background:#f8fafc; }
+    .fake-auth-iframe-wrap iframe { width:100%; height:100%; border:0; }
+    .fake-auth-cancel {
+      background:#0f172a; color:#fff; border:none; border-radius:10px;
+      padding:9px 14px; font-weight:700; cursor:pointer;
+    }
+    html.modal-open, body.modal-open { overflow:hidden; height:100%; }
+    .tooltip-inline { position:relative; text-decoration:none; }
+    .tooltip-inline::after {
+      content: attr(data-tooltip);
+      position:absolute; left:50%; top:130%;
+      transform: translateX(-50%) scale(0.96);
+      background:#0f172a; color:#fff;
+      padding:8px 10px; border-radius:8px;
+      font-size:11px; line-height:1.4; white-space:pre-line;
+      max-width:260px; text-align:left;
+      opacity:0; transition:all 0.12s ease;
+      pointer-events:none; box-shadow:0 6px 14px -6px rgba(0,0,0,0.35);
+    }
+    .tooltip-inline::before {
+      content:""; position:absolute; left:50%; top:120%;
+      transform: translateX(-50%);
+      border:6px solid transparent; border-bottom-color:#0f172a;
+      opacity:0; transition:all 0.12s ease;
+    }
+    .tooltip-inline:hover::after,
+    .tooltip-inline:hover::before {
+      opacity:1; transform: translateX(-50%) scale(1);
+    }
+    @media (max-width: 640px) {
+      .mail-table thead { display:none; }
+      .mail-summary td { display:block; width:100%; border-left:none; border-right:none; }
+      .mail-actions-inline { justify-content:flex-start; }
+    }
+
+    /* Completion Area */
+    .completion-area {
+      text-align: center;
+      padding: 40px 32px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+    }
+    .complete-btn {
+      background-color: #cbd5e1;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 16px 40px;
+      border-radius: 12px;
+      border: none;
+      cursor: not-allowed;
+      transition: all 0.3s;
+      box-shadow: none;
+    }
+    .complete-btn.active {
+      background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
+      cursor: pointer;
+      box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.4);
+    }
+    .complete-btn.active:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 25px -5px rgba(2, 132, 199, 0.5);
+    }
+    
+    /* Certificate Modal/Overlay */
+    .certificate-overlay {
+      display: none;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.8);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+    }
+    .certificate-paper {
+      width: 100%; max-width: 700px;
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      border: 8px double #e2e8f0;
+      position: relative;
+    }
+    .cert-title { font-size: 32px; font-weight: bold; color: #e2e8f0; margin-bottom: 10px; letter-spacing: -1px; }
+    .cert-subtitle { font-size: 16px; color: #64748b; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; }
+    .cert-name { 
+      font-size: 28px; font-weight: bold; color: #e2e8f0; 
+      border-bottom: 2px solid #0f172a; display: inline-block; padding: 0 20px 10px; margin-bottom: 30px; 
+    }
+    .cert-body { font-size: 16px; line-height: 1.8; color: #e2e8f0; margin-bottom: 50px; }
+    .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; }
+    .cert-seal { width: 100px; height: 100px; background: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; font-size: 14px; border: 4px double #fecaca; transform: rotate(-15deg); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .cert-date { font-size: 14px; color: #e2e8f0; text-align: left; }
+    .cert-sign { font-size: 18px; font-weight: bold; color: #e2e8f0; text-align: right; font-family: serif; }
+    .cert-inputs { color: #e2e8f0; }
+    .cert-inputs label { font-size: 13px; color: #cbd5e1; }
+    .cert-rating { margin-top: 12px; text-align: left; color: #e2e8f0; }
+    .cert-rating label { display: block; margin-top: 6px; }
+    .star-rating { display: flex; gap: 6px; margin: 6px 0; justify-content: center; flex-direction: row-reverse; }
+    .star-rating input { display: none; }
+    .star-rating label {
+      cursor: pointer;
+      font-size: 40px;
+      color: #334155;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+    .star-rating input:checked ~ label { color: #f59e0b; }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label { color: #fbbf24; }
+    .cert-feedback { width: 100%; min-height: 70px; margin-top: 6px; }
+
+    /* Animation */
+    @keyframes popIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .certificate-paper { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    
+    .confetti { position: absolute; width: 10px; height: 10px; background-color: #f00; animation: fall linear forwards; }
+    @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+    /* Cyberpunk GUI overrides (match index_2.html) */
+    :root {
+      --bg-color: #050a14;
+      --card-bg: #0b1221;
+      --text-main: #e2e8f0;
+      --text-dim: #94a3b8;
+      --neon-cyan: #00f3ff;
+      --neon-blue: #2563eb;
+      --neon-green: #00ff41;
+      --neon-red: #ff003c;
+      --neon-orange: #ff9d00;
+      --border-color: #1e293b;
+    }
+
+    body {
+      background-color: var(--bg-color) !important;
+      background-image:
+        linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px) !important;
+      background-size: 40px 40px !important;
+      font-family: 'Noto Sans KR', sans-serif !important;
+      color: var(--text-main) !important;
+      overflow-x: hidden !important;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+      background-size: 100% 4px;
+      z-index: 99999;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    a { color: var(--neon-cyan) !important; transition: 0.3s; }
+    a:hover { text-shadow: 0 0 8px var(--neon-cyan); text-decoration: underline; }
+    .en-font, .num, input, .wifi-desc, .status-badge, h1, .chapter-icon, .zoom-card-icon, .clean-num {
+      font-family: 'Rajdhani', 'JetBrains Mono', sans-serif !important;
+    }
+
+    .main-container {
+      max-width: 800px !important;
+      background-color: rgba(11, 18, 33, 0.9) !important;
+      border: 1px solid #334155 !important;
+      border-radius: 0 !important;
+      box-shadow: 0 0 40px rgba(0, 243, 255, 0.1) !important;
+      backdrop-filter: blur(10px) !important;
+      position: relative !important;
+    }
+    .main-container::before {
+      content: "";
+      position: absolute;
+      top: -1px; left: -1px;
+      width: 30px; height: 30px;
+      border-top: 3px solid var(--neon-cyan);
+      border-left: 3px solid var(--neon-cyan);
+    }
+    .main-container::after {
+      content: "";
+      position: absolute;
+      bottom: -1px; right: -1px;
+      width: 30px; height: 30px;
+      border-bottom: 3px solid var(--neon-cyan);
+      border-right: 3px solid var(--neon-cyan);
+    }
+
+    .header-section {
+      padding: 30px !important;
+      border-bottom: 1px solid var(--border-color) !important;
+      background: linear-gradient(90deg, rgba(0,243,255,0.08) 0%, transparent 100%) !important;
+    }
+    .header-section h1 {
+      color: #fff !important;
+      text-transform: uppercase !important;
+      text-shadow: 0 0 15px rgba(0, 243, 255, 0.6) !important;
+    }
+    .header-section p { color: var(--text-dim) !important; }
+    #progress-text, #progress-total { color: var(--neon-cyan) !important; }
+    .intro-section p { color: var(--text-dim) !important; }
+    .header-logo {
+      border: 1px solid var(--border-color) !important;
+      background: rgba(0,0,0,0.3) !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+    .header-logo img { filter: brightness(0) invert(1) drop-shadow(0 0 2px #fff); }
+    .intro-section { padding: 24px 30px !important; }
+    .footer {
+      background: #02040a !important;
+      border-top: 1px solid #1e293b !important;
+      color: #475569 !important;
+    }
+
+    .accordion-list { padding: 0 30px 30px !important; gap: 16px !important; }
+    .accordion-item {
+      border: 1px solid #334155 !important;
+      background-color: #0f172a !important;
+      border-radius: 0 !important;
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%) !important;
+    }
+    .accordion-item:hover { border-color: var(--neon-cyan) !important; box-shadow: 0 0 15px rgba(0, 243, 255, 0.2) !important; }
+    .accordion-item.completed { border-color: var(--neon-green) !important; }
+    .accordion-item.completed .accordion-header { background: rgba(0, 255, 65, 0.05) !important; }
+    .accordion-item.open { border-color: var(--neon-cyan) !important; }
+    .accordion-item.open .accordion-header { background: rgba(0, 243, 255, 0.05) !important; }
+
+    .accordion-header { padding: 22px !important; }
+    .chapter-icon {
+      width: 44px !important; height: 44px !important;
+      background: #1e293b !important; color: var(--neon-cyan) !important; border: 1px solid #334155 !important;
+      border-radius: 0 !important;
+    }
+    .accordion-item.completed .chapter-icon {
+      color: var(--neon-green) !important;
+      border-color: var(--neon-green) !important;
+      box-shadow: 0 0 8px var(--neon-green) !important;
+    }
+    .chapter-title { color: #fff !important; text-transform: uppercase !important; }
+    .chapter-desc { color: var(--text-dim) !important; }
+    .status-badge {
+      background: #334155 !important;
+      color: #94a3b8 !important;
+      border: 1px solid transparent !important;
+      text-transform: uppercase !important;
+    }
+    .accordion-item.completed .status-badge {
+      background: rgba(0, 255, 65, 0.1) !important;
+      color: var(--neon-green) !important;
+      border-color: var(--neon-green) !important;
+    }
+    .arrow-icon { color: var(--text-dim) !important; }
+    .accordion-item.open .arrow-icon { color: var(--neon-cyan) !important; }
+    .accordion-header:hover { background-color: rgba(0, 243, 255, 0.08) !important; }
+    .accordion-header:hover .chapter-title,
+    .accordion-header:hover .chapter-desc,
+    .accordion-header:hover .status-badge {
+      color: var(--text-main) !important;
+    }
+    .chapter-title span {
+      background: rgba(0, 243, 255, 0.12) !important;
+      color: var(--text-main) !important;
+      border: 1px solid var(--neon-cyan) !important;
+    }
+
+    .accordion-content {
+      background-color: rgba(0,0,0,0.4) !important;
+      border-top: 1px solid #334155 !important;
+    }
+    .content-inner p, .content-inner ul li { color: #cbd5e1 !important; }
+
+    .bg-blue-box {
+      background: rgba(37, 99, 235, 0.15) !important;
+      border-left: 4px solid var(--neon-blue) !important;
+      color: #bfdbfe !important;
+    }
+    .guide-link {
+      background: rgba(0, 243, 255, 0.05) !important;
+      color: var(--neon-cyan) !important;
+      border: 1px solid var(--neon-cyan) !important;
+      clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px) !important;
+    }
+    .guide-link:hover {
+      background: var(--neon-cyan) !important;
+      color: #000 !important;
+      box-shadow: 0 0 15px var(--neon-cyan) !important;
+      text-decoration: none !important;
+    }
+
+    .policy-table, .mail-table, .clean-table {
+      border: 1px solid #334155 !important;
+      background: transparent !important;
+      font-family: 'JetBrains Mono', 'Noto Sans KR', sans-serif !important;
+    }
+    .policy-table th, .mail-table th, .clean-table th {
+      background: #0f172a !important;
+      color: var(--neon-cyan) !important;
+      border-bottom: 1px solid var(--neon-cyan) !important;
+    }
+    .policy-table td, .mail-table td, .clean-table td {
+      background: rgba(255,255,255,0.02) !important;
+      color: #cbd5e1 !important;
+      border-bottom: 1px solid #334155 !important;
+    }
+    .clean-table .num { color: var(--neon-orange) !important; }
+    .mail-title-btn { color: var(--neon-cyan) !important; }
+
+    .zoom-card, .psy-card, .wifi-card, .clean-box {
+      background: rgba(255,255,255,0.03) !important;
+      border: 1px solid #334155 !important;
+      border-radius: 0 !important;
+    }
+    .zoom-card:hover, .psy-card:hover, .wifi-card:hover, .clean-box:hover {
+      border-color: var(--neon-cyan) !important;
+      background: rgba(0, 243, 255, 0.05) !important;
+    }
+    .zoom-card-title, .psy-card .title, .clean-box-title {
+      color: #fff !important;
+      text-transform: uppercase !important;
+    }
+    .zoom-card-desc, .psy-card .desc, .clean-box-desc, .wifi-desc { color: var(--text-dim) !important; }
+    .main-container [style*="box-shadow:0 8px 18px -14px rgba(15,23,42,0.2)"] {
+      background: rgba(11, 18, 33, 0.9) !important;
+      border-color: #334155 !important;
+    }
+    .main-container [style*="box-shadow:0 8px 18px -14px rgba(15,23,42,0.2)"] * {
+      color: var(--text-main) !important;
+    }
+
+    .privacy-card, .privacy-toggle, .check-toggle, .mail-lab, .env-quiz, .ox-quiz {
+      background: rgba(0,0,0,0.3) !important;
+      border: 1px solid #334155 !important;
+      border-radius: 0 !important;
+      color: var(--text-main) !important;
+    }
+    .privacy-toggle.active, .check-toggle.active {
+      border-color: var(--neon-green) !important;
+      background: rgba(0, 255, 65, 0.1) !important;
+      color: var(--neon-green) !important;
+    }
+
+    button, .quiz-choice, .mail-toggle, .env-quiz-btn, .complete-btn {
+      font-family: 'Rajdhani', 'Noto Sans KR', sans-serif !important;
+      background: transparent !important;
+      color: var(--neon-cyan) !important;
+      border: 1px solid var(--neon-cyan) !important;
+      clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px) !important;
+    }
+    button:hover, .quiz-choice:hover {
+      background: var(--neon-cyan) !important;
+      color: #000 !important;
+      box-shadow: 0 0 15px var(--neon-cyan) !important;
+    }
+    .quiz-choice.selected {
+      background: var(--neon-orange) !important;
+      border-color: var(--neon-orange) !important;
+      color: #000 !important;
+      box-shadow: 0 0 15px var(--neon-orange) !important;
+    }
+    .complete-btn.active {
+      background: var(--neon-green) !important;
+      border-color: var(--neon-green) !important;
+      color: #000 !important;
+    }
+
+    input[type="text"], input[type="password"] {
+      background: rgba(0,0,0,0.5) !important;
+      border: 1px solid #334155 !important;
+      color: var(--neon-cyan) !important;
+      font-family: 'JetBrains Mono', sans-serif !important;
+    }
+    input:focus { border-color: var(--neon-cyan) !important; box-shadow: 0 0 5px var(--neon-cyan) !important; }
+
+    .completion-area {
+      background: transparent !important;
+      border-top: 1px solid #334155 !important;
+    }
+
+    .celebrate-modal,
+    .mail-modal,
+    .link-warning-overlay,
+    .fake-auth-overlay,
+    .certificate-overlay {
+      background: rgba(0,0,0,0.9) !important;
+      backdrop-filter: blur(5px) !important;
+    }
+    .mail-modal-card,
+    .link-warning-card,
+    .certificate-paper,
+    .fake-auth-card {
+      background: #0b1221 !important;
+      border: 1px solid var(--neon-cyan) !important;
+      color: #fff !important;
+      border-radius: 0 !important;
+    }
+    .mail-modal-card .mail-meta .from,
+    .mail-modal-card .mail-meta .subject,
+    .mail-modal-card .mail-meta .to {
+      color: var(--text-main) !important;
+    }
+    .mail-modal-card .mail-modal-header [style*="color:#94a3b8"],
+    .mail-modal-card .mail-modal-header [style*="color: #94a3b8"] {
+      color: var(--text-dim) !important;
+    }
+    .mail-modal-card .mail-modal-body {
+      color: var(--text-main) !important;
+    }
+    .mail-modal-card .mail-modal-body a {
+      color: var(--neon-cyan) !important;
+    }
+    .mail-lab-title,
+    .mail-lab .mail-lab-title,
+    .mail-lab [style*="font-weight:700"],
+    .mail-lab [style*="font-weight: 700"],
+    .mail-lab [style*="font-weight:bold"],
+    .mail-lab [style*="font-weight: bold"] {
+      color: var(--text-main) !important;
+    }
+    .mail-toggle.spam-unsafe {
+      color: #ff4d4f !important;
+      border-color: #ff8f9b !important;
+      background: rgba(255, 77, 79, 0.12) !important;
+    }
+    .mail-toggle.spam-safe {
+      color: #22c55e !important;
+      border-color: #86efac !important;
+      background: rgba(34, 197, 94, 0.12) !important;
+    }
+    .link-warning-card,
+    .link-warning-card .link-warning-title,
+    .link-warning-card .link-warning-body {
+      color: var(--text-main) !important;
+    }
+    .link-warning-card input {
+      background: rgba(0,0,0,0.5) !important;
+      border: 1px solid #334155 !important;
+      color: var(--neon-cyan) !important;
+    }
+
+    /* Layout spacing tune */
+    .main-container { margin: 28px auto !important; }
+    .header-section { padding: 24px 26px !important; }
+    .intro-section { padding: 20px 26px !important; }
+    .accordion-list { padding: 0 26px 26px !important; gap: 14px !important; }
+    .accordion-header { padding: 18px !important; }
+    .content-inner { padding: 18px !important; }
+    .clean-title-row { margin: 10px 0 !important; }
+    .clean-box-grid { gap: 10px !important; margin-bottom: 12px !important; }
+    .zoom-grid { gap: 10px !important; margin-top: 10px !important; }
+    .psy-grid { gap: 10px !important; margin-top: 10px !important; }
+    .completion-area { padding: 32px 26px !important; }
+    .mail-lab { margin-top: 12px !important; }
+    .env-quiz, .ox-quiz { padding: 18px !important; }
+
+    /* Readability fixes for inline dark text/backgrounds */
+    .main-container [style*="color:#0f172a"],
+    .main-container [style*="color: #0f172a"],
+    .main-container [style*="color:#111827"],
+    .main-container [style*="color: #111827"],
+    .main-container [style*="color:#1f2937"],
+    .main-container [style*="color: #1f2937"],
+    .main-container [style*="color:#334155"],
+    .main-container [style*="color: #334155"] {
+      color: var(--text-main) !important;
+    }
+    .main-container [style*="color:#475569"],
+    .main-container [style*="color: #475569"],
+    .main-container [style*="color:#64748b"],
+    .main-container [style*="color: #64748b"],
+    .main-container [style*="color:#94a3b8"],
+    .main-container [style*="color: #94a3b8"] {
+      color: var(--text-dim) !important;
+    }
+    .main-container [style*="background:#ffffff"],
+    .main-container [style*="background: #ffffff"],
+    .main-container [style*="background-color:#ffffff"],
+    .main-container [style*="background-color: #ffffff"],
+    .main-container [style*="background:#f8fafc"],
+    .main-container [style*="background: #f8fafc"],
+    .main-container [style*="background-color:#f8fafc"],
+    .main-container [style*="background-color: #f8fafc"],
+    .main-container [style*="background:#f1f5f9"],
+    .main-container [style*="background: #f1f5f9"],
+    .main-container [style*="background-color:#f1f5f9"],
+    .main-container [style*="background-color: #f1f5f9"],
+    .main-container [style*="background:#f0f9ff"],
+    .main-container [style*="background: #f0f9ff"],
+    .main-container [style*="background-color:#f0f9ff"],
+    .main-container [style*="background-color: #f0f9ff"] {
+      background: rgba(11, 18, 33, 0.9) !important;
+      border-color: #334155 !important;
+      color: var(--text-main) !important;
+    }
+    .main-container [style*="background:#ecfdf3"],
+    .main-container [style*="background: #ecfdf3"],
+    .main-container [style*="background-color:#ecfdf3"],
+    .main-container [style*="background-color: #ecfdf3"],
+    .main-container [style*="background:#fff7ed"],
+    .main-container [style*="background: #fff7ed"],
+    .main-container [style*="background-color:#fff7ed"],
+    .main-container [style*="background-color: #fff7ed"] {
+      background: rgba(11, 18, 33, 0.9) !important;
+      border-color: #334155 !important;
+      color: var(--text-main) !important;
+    }
+    .main-container [style*="background:#ecfdf3"] *,
+    .main-container [style*="background: #ecfdf3"] *,
+    .main-container [style*="background-color:#ecfdf3"] *,
+    .main-container [style*="background-color: #ecfdf3"] *,
+    .main-container [style*="background:#fff7ed"] *,
+    .main-container [style*="background: #fff7ed"] *,
+    .main-container [style*="background-color:#fff7ed"] *,
+    .main-container [style*="background-color: #fff7ed"] * {
+      color: var(--text-main) !important;
+    }
+
+    .main-container [style*="color:#9f1239"],
+    .main-container [style*="color: #9f1239"],
+    .main-container [style*="color:#881337"],
+    .main-container [style*="color: #881337"],
+    .main-container [style*="color:#991b1b"],
+    .main-container [style*="color: #991b1b"],
+    .main-container [style*="color:#b91c1c"],
+    .main-container [style*="color: #b91c1c"] {
+      color: #fca5a5 !important;
+    }
+
+    /* Social engineering 대응 요령 box */
+    .main-container [style*="background:linear-gradient(180deg,#fff1f2"] {
+      background: rgba(127, 29, 29, 0.2) !important;
+      border-color: var(--neon-red) !important;
+    }
+    .main-container [style*="background:linear-gradient(180deg,#fff1f2"] * {
+      color: #fca5a5 !important;
+    }
+    .main-container [style*="background:linear-gradient(180deg,#fff1f2"] [style*="background:#fecdd3"] {
+      background: rgba(255, 0, 60, 0.18) !important;
+      color: #fecaca !important;
+    }
+    .main-container [style*="background:linear-gradient(135deg, #eef2ff"] {
+      background: rgba(15, 23, 42, 0.7) !important;
+      border-color: #334155 !important;
+    }
+    .main-container [style*="background:linear-gradient(135deg, #eef2ff"] * {
+      color: var(--text-main) !important;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="main-container">
+
+    <!-- Header -->
+    <div class="header-section" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding:32px 32px 24px; color:#ffffff;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="display:inline-block; padding:6px 12px; border-radius:999px; background-color:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); font-size:12px; font-weight:600; color:#e0f2fe; margin-bottom:12px;">
+            Annual Security Awareness Training
+          </div>
+          <h1 style="margin:0 0 8px; font-size:26px; font-weight:bold; letter-spacing:-0.5px; line-height:1.3; color:#ffffff;">임직원 정보보안 교육</h1>
+          <p style="margin:0; font-size:14px; color:#94a3b8; line-height:1.5;">
+            각 챕터를 클릭하여 내용을 확인해주세요. (<span id="progress-text" style="color:#38bdf8; font-weight:bold;">0</span>/<span id="progress-total" style="color:#38bdf8; font-weight:bold;">5</span> 완료)
+          </p>
+        </div>
+        <div class="header-logo" style="width:200px; height:80px; border-radius:16px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center;">
+          <span style="font-size:18px; font-weight:800; letter-spacing:1px; color:#e0f2fe;">SECURITY<br>TRAINING</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Intro -->
+    <div class="intro-section" style="padding:32px;">
+      <div style="display:flex; gap:16px;">
+        <div style="width:48px; height:48px; border-radius:16px; background:#f0f9ff; color:#0284c7; display:flex; align-items:center; justify-content:center; font-size:24px; border:1px solid #bae6fd; flex-shrink:0;">
+          🛡️
+        </div>
+        <div>
+          <p style="margin:0 0 12px; font-size:15px; line-height:1.6; color:#334155;">
+            안녕하세요, <strong>정보보안팀</strong>입니다.<br>
+            아래 8가지 필수 보안 수칙을 모두 읽고 확인해주시기 바랍니다.<br>
+            각 항목을 <strong>클릭하여 내용을 숙지하시고 문제를 푸시면 이수 처리</strong>됩니다.
+          </p>
+          <span class="guide-link" style="cursor:default;">
+            📌 사내 정보보안 가이드 (사내 포털)
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <hr style="border:none; border-top:1px solid #e2e8f0; margin:0 0 32px 0;">
+
+    <!-- Accordion List -->
+    <div class="accordion-list">
+      
+      <!-- Chapter 1: Social Engineering -->
+      <div class="accordion-item" id="chapter-1">
+        <div class="accordion-header" onclick="toggleChapter(1)">
+          <div class="header-left">
+            <div class="chapter-icon">🎣</div>
+            <div class="chapter-info">
+              <div class="chapter-title">1. 사회공학 (Social Engineering) <span style="background:#e0f2fe; color:#0f172a; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:800; margin-left:6px;">간단 보안지식</span></div>
+              <div class="chapter-desc">기술보다 사람을 노리는 해킹</div>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="status-badge" id="badge-1">미완료</div>
+            <div class="arrow-icon">▼</div>
+          </div>
+        </div>
+        <div class="accordion-content">
+          <div class="content-inner">
+            <div style="font-size:16px; font-weight:bold; color:#0f172a; margin-bottom:8px;">사회공학이란?</div>
+            <p style="margin:0 0 16px; font-size:14px; line-height:1.6; color:#475569;">
+              사람의 심리(신뢰, 공포, 호기심 등)를 이용해 정보를 훔치는 공격 기법입니다. 보안 시스템이 강력해도 <strong>휴먼에러</strong>는 발생할 수 있기에 가장 경계해야 합니다.
+            </p>
+            
+            <div class="bg-blue-box" style="margin-bottom:16px;">
+               <strong>😵 휴먼에러:</strong> 긴급 상황이나 권위자의 지시로 위장해 판단력을 흐리게 만듭니다. (예: "CEO 긴급 지시", "계정 잠금 알림")
+            </div>
+
+            <div style="margin-bottom:16px;">
+              <strong style="font-size:15px; display:block; margin-bottom:8px;">🧠 공격자가 노리는 심리 포인트</strong>
+              <div class="psy-grid">
+                <!-- Urgency -->
+                <div class="psy-card" style="background:#fff7ed; border:1px solid #fed7aa; color:#9a3412;">
+                  <div class="header">
+                    <div class="icon">⏰</div>
+                    <div class="title">
+                      긴급성
+                      <span class="title-en">Urgency</span>
+                    </div>
+                  </div>
+                  <div class="desc">
+                    <strong>설명:</strong> 시간 압박으로 판단 시간을 빼앗습니다.<br>
+                    <strong>예시:</strong> "10분 내 인증 안 하면 잠금", "지금 승인하지 않으면 비활성화"
+                  </div>
+                </div>
+
+                <!-- Authority -->
+                <div class="psy-card" style="background:#eef2ff; border:1px solid #c7d2fe; color:#3730a3;">
+                  <div class="header">
+                    <div class="icon">🏢</div>
+                    <div class="title">
+                      권위
+                      <span class="title-en">Authority</span>
+                    </div>
+                  </div>
+                  <div class="desc">
+                    <strong>설명:</strong> 상급자·기관 로고로 신뢰를 가장합니다.<br>
+                    <strong>예시:</strong> "보안팀 공지: VPN 갱신 필수", "임원 지시: 즉시 확인"
+                  </div>
+                </div>
+
+                <!-- Reward -->
+                <div class="psy-card" style="background:#ecfdf5; border:1px solid #6ee7b7; color:#065f46;">
+                  <div class="header">
+                    <div class="icon">🎁</div>
+                    <div class="title">
+                      호의·보상
+                      <span class="title-en">Reward</span>
+                    </div>
+                  </div>
+                  <div class="desc">
+                    <strong>설명:</strong> 선물·쿠폰·도움 요청으로 호의를 유도합니다.<br>
+                    <strong>예시:</strong> "설문 쿠폰 지급, 여기서 로그인", "검증 부탁 링크"
+                  </div>
+                </div>
+
+                <!-- Curiosity -->
+                <div class="psy-card" style="background:#f5f3ff; border:1px solid #ddd6fe; color:#5b21b6;">
+                   <div class="header">
+                     <div class="icon">🔍</div>
+                     <div class="title">
+                       호기심
+                       <span class="title-en">Curiosity</span>
+                     </div>
+                   </div>
+                   <div class="desc">
+                     <strong>설명:</strong> 궁금증을 자극해 열어보게 만듭니다.<br>
+                     <strong>예시:</strong> "급여명세 확인", "연말정산 환급 안내.pdf", "회의 녹화본"
+                   </div>
+                </div>
+
+                <!-- Fear -->
+                <div class="psy-card" style="background:#fef2f2; border:1px solid #fecaca; color:#991b1b;">
+                   <div class="header">
+                     <div class="icon">⚠️</div>
+                     <div class="title">
+                       두려움
+                       <span class="title-en">Fear</span>
+                     </div>
+                   </div>
+                   <div class="desc">
+                     <strong>설명:</strong> 벌금·고발·계정 제한으로 불안을 조성합니다.<br>
+                     <strong>예시:</strong> "미납 벌금, 오늘 미납 시 고발", "보안 미준수로 계정 잠금 예정"
+                   </div>
+                </div>
+
+                <!-- Consistency/Trust -->
+                <div class="psy-card" style="background:#e0f2fe; border:1px solid #bae6fd; color:#075985;">
+                   <div class="header">
+                     <div class="icon">🔁</div>
+                     <div class="title">
+                       일관성·신뢰
+                       <span class="title-en">Consistency/Trust</span>
+                     </div>
+                   </div>
+                   <div class="desc">
+                     <strong>설명:</strong> 기존 스레드·내부 용어로 ‘원래 업무’처럼 위장합니다.<br>
+                     <strong>예시:</strong> 기존 프로젝트 메일에 "추가 파일 확인" 링크 삽입
+                   </div>
+                </div>
+
+                <!-- Social Proof -->
+                <div class="psy-card" style="background:#f8fafc; border:1px solid #cbd5e1; color:#334155;">
+                   <div class="header">
+                     <div class="icon">👥</div>
+                     <div class="title">
+                       사회적 증거
+                       <span class="title-en">Social Proof</span>
+                     </div>
+                   </div>
+                   <div class="desc">
+                     <strong>설명:</strong> 모두가 따르는 것처럼 보여 따라 하게 만듭니다.<br>
+                     <strong>예시:</strong> "R&D팀 완료, 미완료 시 제한", "전사 필수 교육 링크"
+                   </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:linear-gradient(180deg,#fff1f2 0%,#ffe4e6 100%); border:1px solid #fecdd3; border-radius:14px; padding:16px; box-shadow:0 10px 24px -18px rgba(248,113,113,0.45);">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <div style="width:32px; height:32px; border-radius:10px; background:#fecdd3; color:#991b1b; display:flex; align-items:center; justify-content:center; font-weight:900;">!</div>
+                <div style="font-size:13px; font-weight:900; color:#881337;">대응 요령</div>
+              </div>
+              <ul style="margin:0; padding-left:18px; font-size:12px; line-height:1.65; color:#9f1239;">
+                <li>발신 도메인/주소를 꼭! 확인하세요.</li>
+                <li>링크·첨부파일을 함부로 클릭하지 않습니다.</li>
+                <li>의심되면 즉시 보안팀에 신고합니다.</li>
+              </ul>
+            </div>
+
+              <div class="mail-lab">
+                <div class="mail-lab-title">📧 피싱 메일 구분 테스트</div>
+                <p style="margin:4px 0 12px; font-size:13px; color:#64748b; line-height:1.5;">
+                  아래는 실제 피싱메일이 어떻게 해킹을 하는지 직접 클릭해보고 확인해보면서 정상/악성을 찾아보세요.(메일 클릭)
+                </p>
+                <table class="mail-table">
+                  <colgroup>
+                    <col style="width:11%;">
+                    <col style="width:28%;">
+                    <col style="width:49%;">
+                    <col style="width:12%;">
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>작성자</th>
+                      <th>발신 주소</th>
+                      <th>메일 제목</th>
+                      <th style="text-align:right;">악성 / 정상</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="mail-summary" data-mail="mail-1" data-correct="unsafe" onclick="openMailModal('mail-1')">
+                      <td>국세청</td>
+                      <td>hometax-notice@tax-gov-mail.com</td>
+                      <td><button class="mail-title-btn" onclick="openMailModal('mail-1')">[국세청] 세무조사 출석요구 안내통지문</button></td>
+                      <td>
+                        <div class="mail-actions-inline">
+                          <button id="spam-toggle-mail-1" class="mail-toggle" data-state="none" onclick="event.stopPropagation(); toggleSpamDecision('mail-1');">선택</button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr class="mail-summary" data-mail="mail-2" data-correct="unsafe" onclick="openMailModal('mail-2')">
+                      <td>보안팀</td>
+                      <td>security@example.com</td>
+                      <td><button class="mail-title-btn" onclick="openMailModal('mail-2')">[긴급] VPN 비밀번호 재설정</button></td>
+                      <td>
+                        <div class="mail-actions-inline">
+                          <button id="spam-toggle-mail-2" class="mail-toggle" data-state="none" onclick="event.stopPropagation(); toggleSpamDecision('mail-2');">선택</button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr class="mail-summary" data-mail="mail-4" data-correct="unsafe" onclick="openMailModal('mail-4')">
+                      <td>쿠팡페이</td>
+                      <td>no-reply@coupangpay.com</td>
+                      <td><button class="mail-title-btn" onclick="openMailModal('mail-4')">[쿠팡페이] 보안 시스템 검사 - 계정 로그인 이상 알림</button></td>
+                      <td>
+                        <div class="mail-actions-inline">
+                          <button id="spam-toggle-mail-4" class="mail-toggle" data-state="none" onclick="event.stopPropagation(); toggleSpamDecision('mail-4');">선택</button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="mail-summary" data-mail="mail-3" data-correct="safe" onclick="openMailModal('mail-3')">
+                      <td>네이버페이</td>
+                      <td>no-reply@pay.naver.com</td>
+                      <td><button class="mail-title-btn" onclick="openMailModal('mail-3')">[네이버페이] 고객확인제도 정책에 따른 이행 안내입니다.</button></td>
+                      <td>
+                        <div class="mail-actions-inline">
+                          <button id="spam-toggle-mail-3" class="mail-toggle" data-state="none" onclick="event.stopPropagation(); toggleSpamDecision('mail-3');">선택</button>
+                        </div>
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-top:10px;">
+                <button class="quiz-submit" onclick="submitMailQuiz()">확인</button>
+              </div>
+              <div id="mailResult" class="mail-result"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 2: Password -->
+      <div class="accordion-item" id="chapter-2">
+        <div class="accordion-header" onclick="toggleChapter(2)">
+          <div class="header-left">
+            <div class="chapter-icon">🔐</div>
+            <div class="chapter-info">
+              <div class="chapter-title">2. 비밀번호 & 계정 관리</div>
+              <div class="chapter-desc">8자 이상, 영문+숫자+특수문자 필수</div>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="status-badge" id="badge-2">미완료</div>
+            <div class="arrow-icon">▼</div>
+          </div>
+        </div>
+        <div class="accordion-content">
+          <div class="content-inner">
+            <p style="margin:0 0 12px; font-size:13px; color:#64748b;">우리회사는 아래와 같은 패스워드 복잡성 정책을 가지고 있습니다.</p>
+            
+            <div style="margin-bottom:16px;">
+              <strong style="color:#0ea5e9; font-size:13px;">[ 사내 보안정책 - 비밀번호 관리 지침 ]</strong>
+              <table class="policy-table">
+                <tr>
+                  <th>기본 원칙</th>
+                  <td>1인 1계정 사용, 타인(동료)과 계정 공유 절대 금지</td>
+                </tr>
+                <tr>
+                  <th>복잡도</th>
+                  <td>영문(대/소)+숫자+특수문자 포함 <strong>최소 8자 이상</strong></td>
+                </tr>
+                <tr>
+                  <th>관리 주기</th>
+                  <td>임시 비밀번호는 즉시 변경, 주기적 변경 권장</td>
+                </tr>
+                <tr>
+                  <th>금지 사항</th>
+                  <td>개인 신상(생일, 전화번호) 및 유추 가능한 단어 사용 금지</td>
+                </tr>
+              </table>
+              <span class="guide-link" style="cursor:default;">
+                 🔗 상세 보안 정책 가이드
+              </span>
+            </div>
+
+            <ul style="font-size:13px; color:#475569; line-height:1.6; margin-bottom:16px;">
+               <li>MFA(2차 인증) 필수 사용</li>
+               <li>유출이 의심되면 즉시 변경하고 보안팀에 신고</li>
+            </ul>
+            
+            <!-- PW Checker -->
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:16px; text-align:center; width: 100%; margin: 0 auto;">
+               <div style="font-size:13px; font-weight:bold; margin-bottom:4px;">👇 패스워드 강도 자가진단</div>
+               <div style="font-size:11px; color:#64748b; margin-bottom:8px;">사용중인 패스워드의 강도를 테스트해보세요(저장되지 않으니 안심하세요~)</div>
+               <div style="text-align:center; display:flex; justify-content:center; gap:8px; flex-wrap:wrap; align-items:center;">
+                 <input id="pwCheckInput" type="password" placeholder="비밀번호 입력" style="width:50%; min-width:240px; padding:8px; border:1px solid #cbd5e1; border-radius:6px; text-align:center; margin-bottom:8px; outline:none;" oninput="checkPwRules()">
+                 <button type="button" onclick="confirmPwCheck()" style="padding:9px 14px; border:none; background:#0f172a; color:#fff; border-radius:8px; font-weight:800; cursor:pointer;">확인</button>
+               </div>
+               <div id="pwRulesDisplay" style="font-size:11px; color:#64748b; display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
+                  <span id="rule-length" data-text="8~20자">8~20자</span>
+                  <span id="rule-lower" data-text="소문자">소문자</span>
+                  <span id="rule-upper" data-text="대문자">대문자</span>
+                  <span id="rule-number" data-text="숫자">숫자</span>
+                  <span id="rule-special" data-text="특수문자">특수문자</span>
+               </div>
+               <div id="pwResultMsg" style="margin-top:6px; font-size:12px; font-weight:bold; height:18px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 3: Media Control -->
+      <div class="accordion-item" id="chapter-3">
+        <div class="accordion-header" onclick="toggleChapter(3)">
+          <div class="header-left">
+            <div class="chapter-icon">💾</div>
+            <div class="chapter-info">
+              <div class="chapter-title">3. 매체 제어</div>
+              <div class="chapter-desc">USB, 이동식 저장매체 차단 정책</div>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="status-badge" id="badge-3">미완료</div>
+            <div class="arrow-icon">▼</div>
+          </div>
+        </div>
+        <div class="accordion-content">
+          <div class="content-inner">
+            <ul style="font-size:13px; line-height:1.6; color:#475569; margin-top:0;">
+               <li>사내 보안 정책상 USB 등 이동식 저장매체는 <strong>기본 차단</strong>입니다.</li>
+               <li>필요 시 [전자결재 → 매체 사용 신청] 후 [DLP 승인] 과정을 거쳐야 합니다.</li>
+               <li>매체 사용 기한은 <span style="color:#dc2626; font-weight:800;">개발자만 1년</span>이고 <span style="color:#dc2626; font-weight:800;">그 외 임직원분들은 6개월</span>이 최대 기한입니다.</li>
+            </ul>
+            <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:10px; font-size:13px; color:#b91c1c; font-weight:bold; margin:8px 0 12px;">
+              ⚠️ 전자결재가 완료되어도 매체별로 또 엔드포인트 보안 솔루션(DLP)으로 승인을 요청주셔야합니다!<br>
+              <span style="font-weight:600; color:#991b1b;">예) USB 사용 결재를 신청해도, 엔드포인트 보안 솔루션으로 USB 별로 승인 허용이 필요</span>
+            </div>
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden; margin:12px 0;">
+               <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                 <thead>
+                   <tr style="background:#f1f5f9; text-align:left; border-bottom:1px solid #e2e8f0;">
+                     <th style="padding:10px 8px; color:#475569; width:25%;">매체</th>
+                     <th style="padding:10px 8px; color:#475569; width:25%;">정책</th>
+                     <th style="padding:10px 8px; color:#475569;">설명</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0;">이동식 디스크</td>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0; color:#dc2626; font-weight:bold;">차단(기본)</td>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0; color:#64748b;">USB 등 이동식 저장매체</td>
+                   </tr>
+                   <tr>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0;">CD-ROM/DVD/BD</td>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0; color:#dc2626; font-weight:bold;">차단(기본)</td>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0; color:#64748b;">광학 매체</td>
+                   </tr>
+                   <tr>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0;">휴대용 디바이스</td>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0; color:#dc2626; font-weight:bold;">차단(기본)</td>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0; color:#64748b;">스마트폰·태블릿·외장 HDD 등</td>
+                   </tr>
+                   <tr>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0;">이미지 캡처 디바이스</td>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0; color:#dc2626; font-weight:bold;">차단(기본)</td>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0; color:#64748b;">카메라·웹캠·스캐너 등</td>
+                   </tr>
+                   <tr>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0;">Wireless LAN</td>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0; color:#0f172a;">허용(파일 반출 기록)</td>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0; color:#64748b;">무선랜 사용 시 파일 반출 기록</td>
+                   </tr>
+                   <tr>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0;">Bluetooth</td>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0; color:#0f172a;">허용(파일 반출 기록)</td>
+                     <td style="padding:8px; border-bottom:1px solid #e2e8f0; color:#64748b;">블루투스 데이터 전송 시 기록</td>
+                   </tr>
+                   <tr>
+                     <td style="padding:8px;">USB 테더링</td>
+                     <td style="padding:8px; color:#0f172a;">허용(파일 반출 기록)</td>
+                     <td style="padding:8px; color:#64748b;">USB 테더링 이용 시 파일 반출 기록</td>
+                   </tr>
+                 </tbody>
+               </table>
+            </div>
+            <div style="background:#f0fdf4; border:1px dashed #86efac; border-radius:8px; padding:10px; font-size:12px; color:#065f46;">
+               <strong>💡 승인 Tip:</strong> 결재 상신 후 보안팀에 DM 주시면 빠르게 처리됩니다.
+            </div>
+            <div class="ox-quiz">
+              <div style="font-weight:800; color:#c2410c; margin-bottom:8px;">OX 미니 테스트</div>
+
+              <div class="quiz-question">1) 매체제어는 단순 전자결재만 받으면 사용할 수 있다.</div>
+              <div class="quiz-choices">
+                <button type="button" class="quiz-choice" data-media-question="q1" data-media-answer="O" onclick="selectMediaAnswer('q1','O')">O</button>
+                <button type="button" class="quiz-choice" data-media-question="q1" data-media-answer="X" onclick="selectMediaAnswer('q1','X')">X</button>
+              </div>
+              <div id="mediaQuizMsg-q1" style="font-size:12px; font-weight:800; min-height:18px; color:#b91c1c; margin-bottom:8px;"></div>
+
+              <div class="quiz-question">2) 매체 사용 기한은 개발자만 1년이고 그 외 임직원분들은 6개월이 최대 기한이다.</div>
+              <div class="quiz-choices">
+                <button type="button" class="quiz-choice" data-media-question="q2" data-media-answer="O" onclick="selectMediaAnswer('q2','O')">O</button>
+                <button type="button" class="quiz-choice" data-media-question="q2" data-media-answer="X" onclick="selectMediaAnswer('q2','X')">X</button>
+              </div>
+              <div id="mediaQuizMsg-q2" style="font-size:12px; font-weight:800; min-height:18px; color:#b91c1c; margin-bottom:8px;"></div>
+
+              <div class="quiz-question">3) 웹캠(이미지 캡처 디바이스)를 사용하기 위해 전자결재를 상신했고, 승인이 완료된 상태이다. 그리고 노트북의 "웹캠을 엔드포인트 보안 솔루션에 사용신청"했다면 회의실에서 웹캠이 사용가능하다.</div>
+              <div class="quiz-choices">
+                <button type="button" class="quiz-choice" data-media-question="q3" data-media-answer="O" onclick="selectMediaAnswer('q3','O')">O</button>
+                <button type="button" class="quiz-choice" data-media-question="q3" data-media-answer="X" onclick="selectMediaAnswer('q3','X')">X</button>
+              </div>
+              <div id="mediaQuizMsg-q3" style="font-size:12px; font-weight:800; min-height:18px; color:#b91c1c; margin-bottom:8px;"></div>
+
+              <div style="display:flex; justify-content:flex-start; gap:8px;">
+                <button type="button" class="quiz-submit" onclick="submitMediaQuiz()">확인</button>
+              </div>
+              <div id="mediaQuizMsg" style="font-size:12px; font-weight:800; min-height:18px; color:#b91c1c; margin-top:8px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 4: Employee Security Check -->
+      <div class="accordion-item" id="chapter-4">
+        <div class="accordion-header" onclick="toggleChapter(4)">
+          <div class="header-left">
+            <div class="chapter-icon">🔐</div>
+            <div class="chapter-info">
+              <div class="chapter-title">4. 임직원 보안점검</div>
+              <div class="chapter-desc">CLEAN PC / CLEAN DESK</div>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="status-badge" id="badge-4">미완료</div>
+            <div class="arrow-icon">▼</div>
+          </div>
+        </div>
+        <div class="accordion-content">
+          <div class="content-inner">
+             <div style="font-size:12px; color:#0f172a; background:#0f172a; border:1px solid #0f172a; border-radius:12px; padding:12px; margin-bottom:10px; line-height:1.6; box-shadow:0 12px 24px -20px rgba(15,23,42,0.55); color:#e2e8f0;">
+               <div style="font-weight:900; font-size:13px; margin-bottom:4px;">업무환경 점검은 정보보안 활동의 기본입니다.</div>
+               <div style="color:#cbd5e1;">자리·장비·계정·매체 상태를 정기적으로 정돈하고 확인하는 습관이 보안 사고를 막는 첫걸음입니다.</div>
+             </div>
+            <div style="font-size:12px; color:#0f172a; background:linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%); border:1px solid #cbd5e1; border-radius:12px; padding:14px; margin-bottom:12px; line-height:1.65; box-shadow:0 12px 24px -18px rgba(15,23,42,0.35);">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+                <div style="width:34px; height:34px; border-radius:12px; background:#312e81; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; box-shadow:0 10px 18px -14px rgba(49,46,129,0.45);">🗂️</div>
+                <div>
+                 <div style="font-weight:900; color:#0f172a; font-size:13px;">임직원 보안점검 (분기별)</div>
+                   <div style="color:#475569; font-size:12px;">CLEAN PC · CLEAN DESK 상태를 정기적으로 확인해 잠금·업데이트·백신, 책상 정리, 매체·계정 보안 개선점을 안내합니다.</div>
+                 </div>
+               </div>
+               <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+                 <div style="flex:1 1 160px; min-width:140px; background:#f0f9ff; border:1px solid #dbeafe; border-radius:12px; padding:10px; display:flex; gap:10px; align-items:center; box-shadow:0 12px 18px -16px rgba(14,165,233,0.35);">
+                   <div style="width:32px; height:32px; border-radius:10px; background:#0ea5e9; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900;">🪑</div>
+                   <div>
+                     <div style="font-weight:800; color:#0f172a;">내 자리</div>
+                     <div style="color:#475569; font-size:11px;">책상·서랍 정리, 출력물/포스트잇 확인</div>
+                   </div>
+                 </div>
+                 <div style="flex:1 1 160px; min-width:140px; background:#ecfdf3; border:1px solid #bbf7d0; border-radius:12px; padding:10px; display:flex; gap:10px; align-items:center; box-shadow:0 12px 18px -16px rgba(22,163,74,0.35);">
+                   <div style="width:32px; height:32px; border-radius:10px; background:#16a34a; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900;">💻</div>
+                   <div>
+                     <div style="font-weight:800; color:#0f172a;">내 PC</div>
+                     <div style="color:#475569; font-size:11px;">잠금·백신·업데이트·화면보호기 설정</div>
+                   </div>
+                 </div>
+                 <div style="flex:1 1 190px; min-width:160px; background:#fff7ed; border:1px solid #fed7aa; border-radius:12px; padding:10px; display:flex; gap:10px; align-items:center; box-shadow:0 12px 18px -16px rgba(234,88,12,0.3);">
+                   <div style="width:32px; height:32px; border-radius:10px; background:#f97316; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900;">🗄️</div>
+                   <div>
+                     <div style="font-weight:800; color:#0f172a;">담당 서버·자산</div>
+                     <div style="color:#475569; font-size:11px;">접근권한·패치 상태·물리/계정 보안 점검</div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <div class="clean-title-row" style="margin-top:0;">
+               <div class="clean-title-card">CLEAN PC (임직원 PC 보안점검)</div>
+             </div>
+             <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:12px; margin-bottom:10px; box-shadow:0 12px 24px -18px rgba(15,23,42,0.18); display:flex; flex-direction:column; gap:8px; align-items:center;">
+               <div style="font-weight:900; color:#0f172a; font-size:13px;">당사는 엔드포인트 보안 솔루션(DLP·PC 보안점검 통합)을 통해 임직원 PC 보안점검을 하고 있습니다.</div>
+               <div style="color:#475569; font-size:12px;">분기 점검·결재가 이 솔루션으로 연동되어 점검 이력과 개선 사항을 추적합니다.</div>
+               <div style="width:100%; max-width:560px; border-radius:12px; border:1px solid #e2e8f0; background:#f1f5f9; padding:22px 16px; text-align:center; color:#475569; font-size:12px;">
+                 🖥️ <strong style="color:#0f172a;">PC 보안점검 대시보드</strong><br>
+                 (취약 항목 수 · 조치 필요 목록 · 조치하기 버튼)
+               </div>
+               <div style="width:100%; max-width:560px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:10px 12px; color:#0f172a; font-size:12px; line-height:1.5;">
+                 <div style="font-weight:800; margin-bottom:6px;">PC 보안점검 방법</div>
+                 <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center; color:#475569;">
+                   <span style="background:#e0f2fe; color:#0ea5e9; padding:6px 10px; border-radius:999px; font-weight:800;">보안 솔루션 실행</span>
+                   <span style="color:#94a3b8;">➜</span>
+                   <span style="background:#eef2ff; color:#312e81; padding:6px 10px; border-radius:999px; font-weight:800;">홈 메뉴 ‘자세히 보기’ 클릭</span>
+                   <span style="color:#94a3b8;">➜</span>
+                 <span style="background:#ecfdf3; color:#166534; padding:6px 10px; border-radius:999px; font-weight:800;">조치 필요 항목 ‘조치하기’ 후 안내 진행</span>
+                 </div>
+               </div>
+             </div>
+            <div class="clean-box-grid" style="margin-bottom:16px;">
+              <div class="clean-box">
+                <div class="clean-box-head">
+                  <div class="clean-box-icon" style="background:#fff7ed; border:1px solid #ffedd5;">🔒</div>
+                  <div class="clean-box-title">CLEAN PC 체크리스트</div>
+                 </div>
+                 <table class="clean-table">
+                   <tr><td class="num">1.</td><td>윈도우 업데이트 적용 여부 확인</td></tr>
+                   <tr><td class="num">2.</td><td>바이러스 백신 설치 및 최신 업데이트</td></tr>
+                   <tr><td class="num">3.</td><td>화면 보호기 사용(20분) + 재시작 시 로그온 화면 표시</td></tr>
+                   <tr><td class="num">4.</td><td>공유 폴더 해제</td></tr>
+                   <tr><td class="num">5.</td><td>USB 자동 실행 해제</td></tr>
+                   <tr><td class="num">6.</td><td>안전한 PC 비밀번호 사용</td></tr>
+                   <tr><td class="num">7.</td><td>PC 비밀번호 180일 주기 변경</td></tr>
+                 </table>
+               </div>
+             </div>
+             <div class="clean-title-row">
+               <div class="clean-title-card">CLEAN DESK (업무환경 보안점검)</div>
+             </div>
+             <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:12px; margin-bottom:10px; box-shadow:0 12px 24px -18px rgba(15,23,42,0.18); text-align:center;">
+               <div style="font-weight:900; color:#0f172a; font-size:13px; margin-bottom:4px;">우리 회사는 정보보안팀의 직접 순찰을 통해 임직원 업무환경 보안점검을 실시하고 있습니다.</div>
+               <div style="color:#475569; font-size:12px; line-height:1.6;">정보보안팀이 점검 기간 동안 상시 순찰을 진행합니다.</div>
+             </div>
+             <div class="clean-box-grid" style="margin-bottom:16px;">
+               <div class="clean-box">
+                <div class="clean-box-head">
+                  <div class="clean-box-icon" style="background:#f0f9ff; border:1px solid #e0f2fe;">🧹</div>
+                  <div class="clean-box-title">CLEAN DESK 체크리스트</div>
+                </div>
+                <table class="clean-table">
+                  <tr><td class="num">1.</td><td>개인 책상·휴지통·회의실·복합기 주변에 계정 정보가 포함된 출력물 방치 여부 확인</td></tr>
+                  <tr><td class="num">2.</td><td>휴대용 저장장치 방치 여부 확인</td></tr>
+                  <tr><td class="num">3.</td><td>회의실 노트북에 브라우저(사내 계정) 및 사내용 메신저(Slack) 로그인 여부 확인</td></tr>
+                  <tr><td class="num">4.</td><td>회의실 노트북에 개인/민감 정보 파일 존재 여부 확인</td></tr>
+                  <tr><td class="num">5.</td><td>비인가 AP(공유기) 기기 존재 여부 확인</td></tr>
+                  <tr><td class="num">6.</td><td>프린터 기기에 개인정보 포함 문서 방치 여부 확인</td></tr>
+                </table>
+              </div>
+             </div>
+             <div class="ox-quiz env-quiz">
+               <div style="font-weight:800; color:#c2410c; margin-bottom:8px;">📝 임직원 보안 점검 퀴즈</div>
+               <div class="quiz-question">1) 우리 회사 화면보호기 사용 가능 시간은 [________) 이다.</div>
+               <div class="quiz-choices">
+                 <button type="button" class="quiz-choice" data-env-question="q1" data-env-answer="10" onclick="selectEnvAnswer('q1','10')">10</button>
+                 <button type="button" class="quiz-choice" data-env-question="q1" data-env-answer="20" onclick="selectEnvAnswer('q1','20')">20</button>
+                 <button type="button" class="quiz-choice" data-env-question="q1" data-env-answer="30" onclick="selectEnvAnswer('q1','30')">30</button>
+                 <span class="env-quiz-chip">분</span>
+               </div>
+               <div id="envQuizMsg-q1" style="font-size:12px; font-weight:800; min-height:18px; color:#b91c1c; margin-bottom:8px;"></div>
+
+               <div class="quiz-question">2) 우리 회사는 NAS를 사용하고 있으므로 보안점검 항목에 있는 "공유 폴더 해제"는 무시해도 된다. (O/X)</div>
+               <div class="quiz-choices">
+                 <button type="button" class="quiz-choice" data-env-question="q2" data-env-answer="O" onclick="selectEnvAnswer('q2','O')">O</button>
+                 <button type="button" class="quiz-choice" data-env-question="q2" data-env-answer="X" onclick="selectEnvAnswer('q2','X')">X</button>
+               </div>
+               <div id="envQuizMsg-q2" style="font-size:12px; font-weight:800; min-height:18px; color:#b91c1c; margin-bottom:8px;"></div>
+
+               <div class="quiz-question">3) PC 보안점검은 보안 솔루션의 취약 개수를 보고, 조치가 필요한 항목의 설정화면에 직접 들어가서 조치를 해야한다. (O/X)</div>
+               <div class="quiz-choices">
+                 <button type="button" class="quiz-choice" data-env-question="q3" data-env-answer="O" onclick="selectEnvAnswer('q3','O')">O</button>
+                 <button type="button" class="quiz-choice" data-env-question="q3" data-env-answer="X" onclick="selectEnvAnswer('q3','X')">X</button>
+               </div>
+               <div id="envQuizMsg-q3" style="font-size:12px; font-weight:800; min-height:18px; color:#b91c1c; margin-bottom:8px;"></div>
+
+               <div class="env-quiz-actions" style="display:flex; gap:8px; align-items:center;">
+                 <button type="button" class="env-quiz-btn" onclick="submitEnvQuiz()">정답 확인</button>
+                 <span id="envQuizResult" class="env-quiz-result"></span>
+               </div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 5: Wi-Fi -->
+      <div class="accordion-item" id="chapter-5">
+        <div class="accordion-header" onclick="toggleChapter(5)">
+          <div class="header-left">
+            <div class="chapter-icon">📡</div>
+            <div class="chapter-info">
+              <div class="chapter-title">5. Wi-Fi 보안</div>
+              <div class="chapter-desc">사내 공식 Wi-Fi 2종</div>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="status-badge" id="badge-5">미완료</div>
+            <div class="arrow-icon">▼</div>
+          </div>
+        </div>
+        <div class="accordion-content">
+          <div class="content-inner">
+             <p style="font-size:13px; color:#475569; margin-bottom:12px;">당사 공식 Wi-Fi는 두 개입니다.</p>
+             <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+                <div class="wifi-card" style="background:#eff6ff; border:1px solid #bfdbfe; color:#1e3a8a;">
+                   <strong>Corp-Office</strong>
+                   <div style="font-size:11px;">업무용 (보안팀 모니터링)</div>
+                   <div class="wifi-desc">비번은 3개월 주기 변경 (Notice 공지)</div>
+                </div>
+                <div class="wifi-card" style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534;">
+                   <strong>Corp-Guest</strong>
+                   <div style="font-size:11px;">게스트/개인용</div>
+                   <div class="wifi-desc">사내 내부망 접근 불가</div>
+                </div>
+             </div>
+             <div style="font-size:12px; color:#64748b; margin-bottom:12px;">
+                비밀번호 확인: 사내 포털 → 정보보안팀 가이드
+             </div>
+             
+             <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+               <div style="flex:1 1 220px; background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:10px; box-shadow:0 8px 18px -14px rgba(15,23,42,0.2);">
+                 <div style="font-weight:800; color:#0f172a; margin-bottom:4px;">공용망 주의</div>
+                 <div style="font-size:12px; color:#475569; line-height:1.5;">카페/지하철 Free Wi-Fi는 VPN 없이 접속 금지, 민감 업무는 사내망만 사용.</div>
+               </div>
+               <div style="flex:1 1 220px; background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:10px; box-shadow:0 8px 18px -14px rgba(15,23,42,0.2);">
+                 <div style="font-weight:800; color:#0f172a; margin-bottom:4px;">SSID 확인</div>
+                 <div style="font-size:12px; color:#475569; line-height:1.5;">무단 AP에 접속하지 않도록 SSID/패스워드 공지 확인 후 접속.</div>
+               </div>
+               <div style="flex:1 1 220px; background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:10px; box-shadow:0 8px 18px -14px rgba(15,23,42,0.2);">
+                 <div style="font-weight:800; color:#0f172a; margin-bottom:4px;">테더링</div>
+                 <div style="font-size:12px; color:#475569; line-height:1.5;">외부 장소에서 불가피할 땐 휴대폰 테더링 + VPN 사용으로 보호.</div>
+               </div>
+             </div>
+
+             <div class="ox-quiz env-quiz" style="margin-top:12px;">
+               <div style="font-weight:800; color:#c2410c; margin-bottom:8px;">📶 Wi-Fi 보안 OX 퀴즈</div>
+               <div class="quiz-question">1) 회사에서 잡히는 타 회사의 Wi-Fi를 몰래 사용하면 된다. (O/X)</div>
+               <div class="quiz-choices">
+                 <button type="button" class="quiz-choice" data-wifi-question="q1" data-wifi-answer="O" onclick="selectWifiAnswer('q1','O')">O</button>
+                 <button type="button" class="quiz-choice" data-wifi-question="q1" data-wifi-answer="X" onclick="selectWifiAnswer('q1','X')">X</button>
+               </div>
+               <div id="wifiQuizMsg-q1" style="font-size:12px; font-weight:800; min-height:18px; color:#b91c1c; margin-bottom:8px;"></div>
+
+               <div class="quiz-question">2) 공용 Wi-Fi에서는 VPN을 켜고 민감 업무를 최소화해야 한다. (O/X)</div>
+               <div class="quiz-choices">
+                 <button type="button" class="quiz-choice" data-wifi-question="q2" data-wifi-answer="O" onclick="selectWifiAnswer('q2','O')">O</button>
+                 <button type="button" class="quiz-choice" data-wifi-question="q2" data-wifi-answer="X" onclick="selectWifiAnswer('q2','X')">X</button>
+               </div>
+               <div id="wifiQuizMsg-q2" style="font-size:12px; font-weight:800; min-height:18px; color:#b91c1c; margin-bottom:8px;"></div>
+
+               <div class="quiz-question">3) 사내 업무는 반드시 Corp-Office에 접속해 진행해야 한다. (O/X)</div>
+               <div class="quiz-choices">
+                 <button type="button" class="quiz-choice" data-wifi-question="q3" data-wifi-answer="O" onclick="selectWifiAnswer('q3','O')">O</button>
+                 <button type="button" class="quiz-choice" data-wifi-question="q3" data-wifi-answer="X" onclick="selectWifiAnswer('q3','X')">X</button>
+               </div>
+               <div id="wifiQuizMsg-q3" style="font-size:12px; font-weight:800; min-height:18px; color:#b91c1c; margin-bottom:8px;"></div>
+
+               <div class="env-quiz-actions" style="display:flex; gap:8px; align-items:center;">
+                 <button type="button" class="env-quiz-btn" onclick="submitWifiQuiz()">정답 확인</button>
+                 <span id="wifiQuizResult" class="env-quiz-result"></span>
+               </div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Completion Section -->
+    <div class="completion-area">
+      <h3 style="margin:0 0 8px; color:#0f172a;">모든 교육 내용을 확인하셨나요?</h3>
+      <p style="margin:0 0 24px; font-size:13px; color:#64748b;">위 모든 항목을 열람하시면 수료증을 발급받을 수 있습니다.</p>
+      <button id="completeBtn" class="complete-btn" onclick="issueCertificate()" disabled title="전섹션을 이수해주세요">이수 완료하기</button>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer" style="background-color:#0f172a; padding:32px; text-align:center;">
+      <p style="margin:0 0 8px; font-size:12px; color:#94a3b8;">
+        본 페이지는 ISMS 인증 기준에 따른 의무 교육 자료입니다.
+      </p>
+      <p style="margin:0; font-size:12px; color:#64748b;">
+        Copyright © 정보보안팀 (Information Security Team)
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Certificate Overlay -->
+  <div id="certOverlay" class="certificate-overlay" onclick="closeCert(event)">
+    <div class="certificate-paper" onclick="event.stopPropagation()">
+       <div class="cert-subtitle" style="color:#e2e8f0;">Certificate of Completion</div>
+       <div class="cert-title" style="color:#e2e8f0;">정보보안 교육 수료 완료</div>
+       
+       <div style="margin: 30px 0;">
+         <div class="cert-inputs" style="font-size:14px; margin-bottom:8px;">소속, 성명, 이메일을 입력해주세요</div>
+         
+         <div style="display:flex; flex-direction:column; gap:8px; align-items:center; margin-bottom:16px;">
+           <div style="display:flex; gap:8px; justify-content:center; width:100%;">
+             <select id="deptNameInput" style="font-size:15px; padding:8px 10px; text-align:center; border:1px solid #334155; border-radius:8px; outline:none; width:160px; background:#0b1221; color:#e2e8f0;">
+               <option value="" disabled selected>소속 선택</option>
+               <option value="부서 A">부서 A</option>
+               <option value="부서 B">부서 B</option>
+               <option value="부서 C">부서 C</option>
+               <option value="부서 D">부서 D</option>
+               <option value="부서 E">부서 E</option>
+               <option value="개발팀">개발팀</option>
+               <option value="마케팅팀">마케팅팀</option>
+               <option value="회계팀">회계팀</option>
+               <option value="사업전략팀">사업전략팀</option>
+               <option value="정보보안팀">정보보안팀</option>
+               <option value="인사총무팀">인사총무팀</option>
+               <option value="CS팀">CS팀</option>
+               <option value="QA팀">QA팀</option>
+             </select>
+  
+             <input type="text" id="userNameInput" placeholder="성명" style="font-size:16px; padding:8px 12px; text-align:center; border:1px solid #334155; border-radius:8px; outline:none; width:140px; background:#0b1221; color:#e2e8f0;">
+           </div>
+
+           <input type="email" id="userEmailInput" placeholder="이메일 (예: user@example.com)" style="font-size:16px; padding:8px 12px; text-align:center; border:1px solid #334155; border-radius:8px; outline:none; width:310px; background:#0b1221; color:#e2e8f0;">
+         </div>
+         <div class="cert-rating">
+           <label>본 교육이 어땠나요?</label>
+           <div class="star-rating">
+             <input type="radio" id="rating-5" name="training-rating" value="5">
+             <label for="rating-5">★</label>
+             <input type="radio" id="rating-4" name="training-rating" value="4">
+             <label for="rating-4">★</label>
+             <input type="radio" id="rating-3" name="training-rating" value="3">
+             <label for="rating-3">★</label>
+             <input type="radio" id="rating-2" name="training-rating" value="2">
+             <label for="rating-2">★</label>
+             <input type="radio" id="rating-1" name="training-rating" value="1">
+             <label for="rating-1">★</label>
+           </div>
+           <br>
+           <label>(선택) 본 교육에 대해서 건의사항이나 보완사항이 있다면 작성해주세요</label>
+           <textarea id="trainingFeedback" class="cert-feedback" placeholder="의견을 작성해주세요" style="font-size:12px; padding:8px 10px; border-radius:8px; border:1px solid #334155; background:#0b1221; color:#e2e8f0; outline:none;"></textarea>
+         </div>
+         <button onclick="submitTraining()" style="font-size:16px; padding:8px 24px; background:#0ea5e9; color:#fff; border:none; border-radius:8px; cursor:pointer; margin-top:12px;">확인 및 제출</button>
+       </div>
+
+       <div id="finalCertContent" style="display:none;">
+         <div class="cert-name"><span id="certDeptDisplay" style="font-size:20px; font-weight:normal; color:#e2e8f0;"></span> <span id="certNameDisplay" style="color:#e2e8f0;">홍길동</span></div>
+         <div class="cert-body">
+           위 사람은 당사 정기 정보보안 교육<br>
+           (사회공학, 계정관리, 매체제어 등 ISMS 필수 항목)<br>
+           과정을 이수하였음을 증명합니다.
+         </div>
+         <div class="cert-footer">
+           <div class="cert-date" id="certDate">2025. 01. 01</div>
+           <div style="display:flex; flex-direction:column; align-items:flex-end;">
+             <div class="cert-sign">Information Security Team</div>
+           </div>
+           <div class="cert-seal">이수<br>완료</div>
+         </div>
+         <div style="margin-top:20px; font-size:12px; color:#e2e8f0;">
+           * 제출되었습니다(데모). 실제 배포판에서는 이수 정보가 시스템에 저장됩니다.
+         </div>
+       </div>
+
+    </div>
+  </div>
+
+  <div id="linkWarning" class="link-warning-overlay" onclick="closeLinkWarning(event)">
+    <div class="link-warning-card" onclick="event.stopPropagation()">
+      <div class="link-warning-icon">!</div>
+      <div class="link-warning-title">⚠️ 보안 경고</div>
+      <div class="link-warning-body" id="linkWarningBody">이러면 VPN 비밀번호 변경...</div>
+      <div class="link-warning-form" id="fakePwForm">
+        <input type="password" id="fake-old-pw" placeholder="이전 비밀번호 입력">
+        <input type="password" id="fake-new-pw" placeholder="신규 비밀번호 입력">
+        <input type="password" id="fake-new-pw-confirm" placeholder="한번더 비밀번호 입력">
+        <button onclick="submitFakeChange()">변경하기</button>
+      </div>
+      <button onclick="closeLinkWarning()">닫기</button>
+    </div>
+  </div>
+
+  <div id="mockAuth" class="fake-auth-overlay" onclick="closeFakeAuth(event)">
+    <div class="fake-auth-card" onclick="event.stopPropagation()">
+      <div class="fake-auth-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-weight:800; color:#0f172a; font-size:14px;">🔒 https://login.oo-mall-secure.com/verify</span>
+        </div>
+        <button class="fake-auth-cancel" style="width:auto;" onclick="closeFakeAuth()">닫기</button>
+      </div>
+      <div class="fake-auth-iframe-wrap">
+        <iframe id="mockAuthFrame" title="모의 인증 페이지" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const chapterIds = Array.from(document.querySelectorAll('.accordion-item')).map(item => parseInt(item.id.replace('chapter-',''), 10));
+    const totalChapters = chapterIds.length;
+    const completionStatus = {};
+    chapterIds.forEach(id => completionStatus[id] = false);
+    let mailLabComplete = false;
+    let pwCheckComplete = false;
+    let mediaQuizComplete = false;
+    let envQuizComplete = false;
+    let wifiQuizComplete = false;
+    let mockAuthLoaded = false;
+    let mediaQuizSelected = {}; // { q1: 'O' | 'X', ... }
+    let mediaQuizFailCount = { q1: 0, q2: 0, q3: 0 };
+    let envQuizSelected = {}; // { q1: '20', q2: 'O' | 'X', q3: 'O' | 'X' }
+    let wifiQuizSelected = {}; // { q1: 'O' | 'X', q2: 'O' | 'X', q3: 'O' | 'X' }
+
+    function toggleChapter(id) {
+      const item = document.getElementById(`chapter-${id}`);
+      const badge = document.getElementById(`badge-${id}`);
+      
+      // Toggle Open
+      item.classList.toggle('open');
+      
+      // content max-height logic for animation
+      const content = item.querySelector('.accordion-content');
+      if (item.classList.contains('open')) {
+        content.style.maxHeight = content.scrollHeight + "px";
+        
+        // Mark as completed if not already (chapter 1 requires mail lab completion, chapter 2 requires 비밀번호 강도 체크, chapter 3 requires 매체제어 OX)
+        if (!completionStatus[id]) {
+          const ready = id === 1 ? mailLabComplete
+                       : id === 2 ? pwCheckComplete
+                       : id === 3 ? mediaQuizComplete
+                       : id === 4 ? envQuizComplete
+                       : id === 5 ? wifiQuizComplete
+                       : true;
+          if (ready) {
+            markChapterCompleted(id);
+          }
+        }
+
+      } else {
+        content.style.maxHeight = "0";
+      }
+    }
+
+    const progressTotalEl = document.getElementById('progress-total');
+    if (progressTotalEl) progressTotalEl.textContent = totalChapters;
+
+    function checkProgress() {
+      const completedCount = chapterIds.reduce((count, id) => count + (completionStatus[id] ? 1 : 0), 0);
+      
+      // Update Text
+      const progressTextEl = document.getElementById('progress-text');
+      if (progressTextEl) progressTextEl.textContent = completedCount;
+      if (progressTotalEl) progressTotalEl.textContent = totalChapters;
+
+      // Enable Button if all done
+      const btn = document.getElementById('completeBtn');
+      if (completedCount === totalChapters) {
+        btn.classList.add('active');
+        btn.textContent = "🎉 이수 완료하기 (Click)";
+        btn.disabled = false;
+        btn.removeAttribute('title');
+      } else {
+        btn.classList.remove('active');
+        btn.textContent = "이수 완료하기";
+        btn.disabled = true;
+        btn.title = "전섹션을 이수해주세요";
+      }
+    }
+
+    function markChapterCompleted(id) {
+      if (completionStatus[id]) return;
+      const item = document.getElementById(`chapter-${id}`);
+      const badge = document.getElementById(`badge-${id}`);
+      completionStatus[id] = true;
+      if (item) item.classList.add('completed');
+      if (badge) badge.textContent = "이수 완료";
+      // Collapse completed section
+      if (item) {
+        item.classList.remove('open');
+        const content = item.querySelector('.accordion-content');
+        if (content) content.style.maxHeight = "0";
+      }
+      showChapterCelebrate(id);
+      checkProgress();
+    }
+
+    function issueCertificate() {
+      const btn = document.getElementById('completeBtn');
+      if (!btn.classList.contains('active')) {
+        alert("모든 챕터를 열람하여 이수를 완료해주세요!");
+        return;
+      }
+      document.getElementById('certOverlay').style.display = 'flex';
+      
+      // Set Date
+      const today = new Date();
+      const dateStr = `${today.getFullYear()}. ${String(today.getMonth()+1).padStart(2,'0')}. ${String(today.getDate()).padStart(2,'0')}`;
+      document.getElementById('certDate').textContent = dateStr;
+    }
+
+function submitTraining() {
+      const nameInput = document.getElementById('userNameInput');
+      const deptInput = document.getElementById('deptNameInput');
+      const emailInput = document.getElementById('userEmailInput'); // [추가]
+      
+      const name = nameInput.value.trim();
+      const dept = deptInput.value.trim();
+      const email = emailInput.value.trim(); // [추가]
+
+      if (!name || !dept || !email) {
+        alert("소속, 성명, 이메일을 모두 입력해주세요.");
+        return;
+      }
+      
+      // 이메일 형식 간단 체크 (선택사항)
+      if (!email.includes('@')) {
+        alert("올바른 이메일 형식을 입력해주세요.");
+        return;
+      }
+      
+      // 로딩 표시
+      const submitBtn = event.target;
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = "확인 중...";
+      submitBtn.disabled = true;
+
+      // 데이터 객체 생성 (이메일 추가)
+      const rating = (document.querySelector('input[name="training-rating"]:checked') || {}).value || '';
+      const feedback = (document.getElementById('trainingFeedback')?.value || '').trim();
+      const data = { name: name, dept: dept, email: email, rating: rating, feedback: feedback };
+
+      // 구글 앱스크립트 호출
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler((response) => {
+             if (response && response.success) {
+                // 성공 시 수료증 발급
+                showCertificate(dept, name);
+             } else if (response && response.reason === 'duplicate') {
+                // 중복 알림 메시지 구체화
+                alert("📢 이미 교육을 이수하셨습니다.\n(해당 이메일로 이수 내역이 존재합니다.)");
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+             } else {
+                alert("저장에 실패했습니다. 다시 시도해주세요.");
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+             }
+          })
+          .withFailureHandler((err) => {
+             alert("서버 통신 오류가 발생했습니다.\n" + err);
+             submitBtn.textContent = originalText;
+             submitBtn.disabled = false;
+          })
+          .saveToSheet(data);
+      } else {
+        // 공개용 데모: Apps Script 백엔드가 없으므로 클라이언트에서 바로 성공 처리한다.
+        // 피드백은 서버 전송 없이 localStorage에만 저장한다(no-op 대체).
+        try {
+          const log = JSON.parse(localStorage.getItem('trainingSubmissions') || '[]');
+          log.push({ ...data, submittedAt: new Date().toISOString() });
+          localStorage.setItem('trainingSubmissions', JSON.stringify(log));
+        } catch (err) {
+          console.log('localStorage 사용 불가, 저장 생략', err);
+        }
+        console.log('데모 환경: 제출되었습니다(데모)', data);
+        setTimeout(() => { showCertificate(dept, name); }, 400);
+      }
+    }
+
+    function showCertificate(dept, name) {
+      document.getElementById('certNameDisplay').textContent = name;
+      document.getElementById('certDeptDisplay').textContent = dept;
+      
+      // Switch view within modal
+      document.getElementById('userNameInput').parentElement.parentElement.style.display = 'none';
+      document.getElementById('finalCertContent').style.display = 'block';
+
+      // Confetti effect
+      fireConfetti();
+    }
+
+    function closeCert(e) {
+      if (e.target.id === 'certOverlay') {
+        document.getElementById('certOverlay').style.display = 'none';
+      }
+    }
+
+    // Privacy toggles
+    function togglePrivacy(id) {
+      const el = document.getElementById(id);
+      const state = el.querySelector('.privacy-toggle-state');
+      el.classList.toggle('active');
+      state.textContent = el.classList.contains('active') ? '✅ 확인됨' : '확인하기';
+    }
+
+    // Generic quick-check toggles
+    function toggleCheck(id) {
+      const el = document.getElementById(id);
+      const state = el.querySelector('.check-toggle-state');
+      el.classList.toggle('active');
+      state.textContent = el.classList.contains('active') ? '✅ 완료' : '확인하기';
+    }
+
+    // Phishing mail lab
+    function toggleMailContent(id) {
+      openMailModal(id);
+    }
+
+    function setMailDecision(id, decision) {
+      const summary = document.querySelector(`.mail-summary[data-mail="${id}"]`);
+      if (!summary) return;
+      summary.dataset.decision = decision;
+    }
+
+    function submitMailQuiz() {
+      const rows = document.querySelectorAll('.mail-summary');
+      let correct = 0;
+      let total = 0;
+      rows.forEach(row => {
+        total++;
+        const answer = row.dataset.correct;
+        const choice = row.dataset.decision;
+        if (choice && choice === answer) correct++;
+      });
+      const result = document.getElementById('mailResult');
+      if (correct === total) {
+        result.textContent = `✅ 정답! ${correct}/${total} 모두 맞혔어요.`;
+        result.style.color = "#16a34a";
+        mailLabComplete = true;
+        markChapterCompleted(1);
+        closeChapter(1);
+      } else {
+        result.textContent = `⚠️ ${correct}/${total}개 맞음. 다시 확인해보세요.`;
+        result.style.color = "#b91c1c";
+      }
+    }
+
+    function openMailModal(id) {
+      const modal = document.getElementById(`${id}-modal`);
+      if (modal) {
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
+        // Close when clicking outside the card
+        const handler = (e) => {
+          if (e.target === modal) {
+            closeMailModal(id);
+          }
+        };
+        modal.addEventListener('click', handler, { once: true });
+        // Close modal when any link inside is clicked
+        const links = modal.querySelectorAll('a');
+        links.forEach(link => {
+          link.addEventListener('click', () => closeMailModal(id), { once: true });
+        });
+      }
+    }
+
+    function openLinkWarning(type) {
+      const overlay = document.getElementById('linkWarning');
+      const body = document.getElementById('linkWarningBody');
+      const pwForm = document.getElementById('fakePwForm');
+      if (!overlay || !body) return;
+      let msg = '비밀번호는 타인에게 알려주지 마세요! 정확한 비밀번호를 입력바랍니다.';
+      if (type === 'vpn') {
+        msg = '패스워드를 안전하게 변경해주세요.';
+        if (pwForm) pwForm.style.display = 'flex';
+      } else if (type === 'pdf') {
+        msg = '첨부파일을 함부로 내려받지 마세요.\n문서 매크로를 악용한 악성코드는 여전히 유포되며, docx, xlsx, pptx, pdf 등을 열 때 주의가 필요합니다.\n\n파일을 열거나 매크로 실행만으로 감염·전파되는 공격이 있으니, 출처가 불분명한 첨부는 열지 말고 보안팀에 확인하세요.\n\n(이 교육 데모에서는 실제 파일이 내려받아지지 않습니다.)';
+        if (pwForm) pwForm.style.display = 'none';
+      } else {
+        if (pwForm) pwForm.style.display = 'none';
+      }
+      body.textContent = msg;
+      overlay.classList.add('active');
+      document.body.classList.add('modal-open');
+    }
+
+    function showMailCelebrate() {
+      const overlay = document.getElementById('mailCelebrate');
+      if (!overlay) return;
+      overlay.classList.add('active');
+      document.body.classList.add('modal-open');
+      setTimeout(() => closeMailCelebrate(), 2600);
+    }
+
+    function closeMailCelebrate() {
+      const overlay = document.getElementById('mailCelebrate');
+      if (!overlay) return;
+      overlay.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+
+    function downloadPdf() {
+      // 공개용 데모: 실제 첨부파일 다운로드(원래는 안티바이러스 테스트 파일)를 제거했다.
+      // 학습 흐름은 openLinkWarning('pdf')의 경고 안내로 이어진다.
+    }
+
+    function closeLinkWarning(e) {
+      if (e && e.target && e.currentTarget && e.target !== e.currentTarget && e.type === 'click') return;
+      const overlay = document.getElementById('linkWarning');
+      if (overlay) overlay.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+
+    function submitFakeChange() {
+      const oldPw = document.getElementById('fake-old-pw')?.value.trim() || '';
+      const newPw = document.getElementById('fake-new-pw')?.value.trim() || '';
+      const newPwConfirm = document.getElementById('fake-new-pw-confirm')?.value.trim() || '';
+
+      if (!oldPw || !newPw || !newPwConfirm) {
+        alert('이전 비밀번호와 신규 비밀번호를 모두 입력해주세요.');
+        return;
+      }
+      if (newPw !== newPwConfirm) {
+        alert('신규 비밀번호가 일치하지 않습니다. 다시 확인해주세요.');
+        return;
+      }
+
+      alert('이러면 해킹당하는 겁니다 ㅠㅠ!!!');
+      closeLinkWarning();
+    }
+
+    function closeMailModal(id) {
+      const modal = document.getElementById(`${id}-modal`);
+      if (modal) modal.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+
+    // 공개용 데모: 외부 Apps Script 대신 일반화된 로그인 목업을 iframe.srcdoc으로 주입한다.
+    function getMockShopHtml() {
+      return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><style>
+        *{box-sizing:border-box;font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;}
+        body{margin:0;background:#f4f4f4;color:#222;}
+        .banner{background:#b91c1c;color:#fff;padding:14px 18px;font-size:13px;line-height:1.6;}
+        .wrap{max-width:360px;margin:36px auto;background:#fff;border:1px solid #ddd;border-radius:10px;padding:28px 24px;}
+        .brand{font-size:22px;font-weight:900;color:#d13b3b;text-align:center;margin-bottom:22px;letter-spacing:1px;}
+        label{display:block;font-size:12px;color:#666;margin:12px 0 4px;}
+        input{width:100%;padding:11px 12px;border:1px solid #ccc;border-radius:6px;font-size:14px;}
+        button{width:100%;margin-top:20px;padding:12px;background:#d13b3b;color:#fff;border:0;border-radius:6px;font-size:15px;font-weight:700;cursor:pointer;}
+        .warn{display:none;margin-top:16px;padding:12px;background:#fff3cd;border:1px solid #ffe08a;border-radius:6px;font-size:13px;line-height:1.6;color:#7a5b00;}
+      </style></head><body>
+        <div class="banner">⚠️ 이 화면은 원래 실제 쇼핑몰 로그인 페이지를 복제한 모의 피싱 화면이었습니다. 공개용 포트폴리오에서는 보안상 일반화된 목업으로 대체했습니다.</div>
+        <div class="wrap">
+          <div class="brand">OO몰 로그인</div>
+          <label>아이디</label><input type="text" placeholder="아이디를 입력하세요">
+          <label>비밀번호</label><input type="password" placeholder="비밀번호를 입력하세요">
+          <button type="button" id="mockLoginBtn">로그인</button>
+          <div id="mockWarn" class="warn">🚨 실제 상황이었다면 방금 입력한 계정 정보가 공격자에게 전송되었습니다. 이런 화면에서는 절대 입력하지 말고 즉시 보안팀에 신고하세요.</div>
+        </div>
+        <script>document.getElementById('mockLoginBtn').addEventListener('click',function(){document.getElementById('mockWarn').style.display='block';});<\/script>
+      </body></html>`;
+    }
+
+    function openFakeAuth() {
+      const overlay = document.getElementById('mockAuth');
+      const frame = document.getElementById('mockAuthFrame');
+      if (frame && !mockAuthLoaded) {
+        frame.srcdoc = getMockShopHtml();
+        mockAuthLoaded = true;
+      }
+      if (overlay) {
+        overlay.classList.add('active');
+        document.body.classList.add('modal-open');
+        document.documentElement.classList.add('modal-open');
+      }
+    }
+
+    function closeFakeAuth(e) {
+      if (e && e.target && e.currentTarget && e.target !== e.currentTarget && e.type === 'click') return;
+      const overlay = document.getElementById('mockAuth');
+      if (overlay) overlay.classList.remove('active');
+      document.body.classList.remove('modal-open');
+      document.documentElement.classList.remove('modal-open');
+    }
+
+    function submitFakeAuth() {
+      // no-op placeholder
+    }
+
+    function toggleSpamDecision(id) {
+      const btn = document.getElementById(`spam-toggle-${id}`);
+      if (!btn) return;
+      const current = btn.dataset.state || 'none';
+      let next;
+      if (current === 'none') next = 'unsafe';
+      else next = current === 'unsafe' ? 'safe' : 'unsafe';
+      btn.dataset.state = next;
+      btn.classList.remove('spam-unsafe', 'spam-safe');
+      if (next === 'unsafe') {
+        btn.textContent = 'O (스팸)';
+        btn.classList.add('spam-unsafe');
+      } else if (next === 'safe') {
+        btn.textContent = 'X (정상)';
+        btn.classList.add('spam-safe');
+      } else {
+        btn.textContent = '선택';
+      }
+      setMailDecision(id, next === 'unsafe' ? 'unsafe' : next === 'safe' ? 'safe' : '');
+    }
+
+
+    // Password Logic
+    function checkPwRules() {
+      const pw = document.getElementById('pwCheckInput').value;
+      const rules = {
+        length: pw.length >= 8 && pw.length <= 20,
+        lower: /[a-z]/.test(pw),
+        upper: /[A-Z]/.test(pw),
+        number: /[0-9]/.test(pw),
+        special: /[^A-Za-z0-9]/.test(pw)
+      };
+
+      for (const [key, valid] of Object.entries(rules)) {
+        const el = document.getElementById(`rule-${key}`);
+        if(el) {
+          // data-text 속성에서 원래 텍스트 가져오기 (예: "8~20자")
+          const originalText = el.getAttribute('data-text');
+          
+          el.style.color = valid ? "#16a34a" : "#64748b";
+          el.style.fontWeight = valid ? "bold" : "normal";
+          // 아이콘 + 원래 텍스트 조합
+          el.textContent = (valid ? "✓ " : "✕ ") + originalText;
+        }
+      }
+
+      const msg = document.getElementById('pwResultMsg');
+      msg.textContent = "";
+    }
+
+    function confirmPwCheck() {
+      const pw = document.getElementById('pwCheckInput').value || '';
+      checkPwRules();
+      const rulesMet = pw.length >= 8 && pw.length <= 20 &&
+                       /[a-z]/.test(pw) &&
+                       /[A-Z]/.test(pw) &&
+                       /[0-9]/.test(pw) &&
+                       /[^A-Za-z0-9]/.test(pw);
+      const msg = document.getElementById('pwResultMsg');
+      if (!rulesMet) {
+        msg.style.color = "#dc2626";
+        msg.textContent = "지금 비밀번호는 안전하지 않습니다. 안전한 비밀번호를 만들어보세요.";
+        return;
+      }
+      msg.style.color = "#16a34a";
+      msg.textContent = "완벽합니다! 해당 비밀번호로 사용을 권장드립니다!";
+      if (!pwCheckComplete) {
+        pwCheckComplete = true;
+        markChapterCompleted(2);
+      }
+    }
+
+    const mediaQuizConfig = {
+      q1: {
+        correct: 'X',
+        explain: "전자결재는 단순 매체를 사용하기위한 자격을 받는 순서입니다. 반드시 사용되는 장치를 엔드포인트 보안 솔루션에서 승인받아야 합니다.",
+        failCount: 0
+      },
+      q2: {
+        correct: 'O',
+        explain: "매체 사용 기한은 개발자만 1년이고 그 외 임직원분들은 6개월이 최대 기한입니다.",
+        failCount: 0
+      },
+      q3: {
+        correct: 'X',
+        explain: "전자 결재를 완료하고 한 단말기를 엔드포인트 보안 솔루션으로 승인받았더라도, 다른 단말기를 사용하려면 추가로 사용신청을 해야 합니다.",
+        failCount: 0
+      }
+    };
+
+    function selectMediaAnswer(question, answer) {
+      mediaQuizSelected[question] = answer;
+      const buttons = document.querySelectorAll(`[data-media-question="${question}"]`);
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-media-answer') === answer) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+      const msg = document.getElementById(`mediaQuizMsg-${question}`);
+      if (msg) msg.textContent = "";
+      const bottomMsg = document.getElementById('mediaQuizMsg');
+      if (bottomMsg) bottomMsg.textContent = "";
+    }
+
+    function submitMediaQuiz() {
+      let allAnswered = true;
+      let allCorrect = true;
+      const hints = [];
+      Object.keys(mediaQuizConfig).forEach(q => {
+        const msg = document.getElementById(`mediaQuizMsg-${q}`);
+        if (msg) msg.textContent = "";
+        const selected = mediaQuizSelected[q];
+        if (!selected) {
+          allAnswered = false;
+        }
+      });
+
+      const bottomMsg = document.getElementById('mediaQuizMsg');
+      if (!allAnswered) {
+        bottomMsg.style.color = "#b91c1c";
+        bottomMsg.textContent = "모든 문제(O/X)를 선택 후 제출해주세요.";
+        return;
+      } else {
+        bottomMsg.textContent = "";
+      }
+
+      Object.entries(mediaQuizConfig).forEach(([q, cfg]) => {
+        const selected = mediaQuizSelected[q];
+        if (selected === cfg.correct) {
+          // no per-question feedback to 숨김
+        } else {
+          allCorrect = false;
+          cfg.failCount = (cfg.failCount || 0) + 1;
+          if (cfg.failCount >= 3) {
+            hints.push(cfg.explain);
+          }
+        }
+      });
+
+      if (allCorrect) {
+        bottomMsg.style.color = "#16a34a";
+        bottomMsg.textContent = "전체 정답! 승인 절차를 정확히 이해했습니다.";
+        if (!mediaQuizComplete) {
+          mediaQuizComplete = true;
+          markChapterCompleted(3);
+        }
+        showMediaCelebrate();
+        closeChapter(3);
+      } else {
+        bottomMsg.style.color = "#b91c1c";
+        if (hints.length) {
+          bottomMsg.innerHTML = "문제 중에 틀린 항목이 있습니다.<br>" + hints.map(h => "• " + h).join("<br>");
+        } else {
+          bottomMsg.textContent = "문제 중에 틀린 항목이 있습니다. 다시 한번 확인해주세요.";
+        }
+      }
+      if (!allCorrect) adjustAccordionHeight(3);
+    }
+
+    function selectEnvAnswer(question, answer) {
+      envQuizSelected[question] = answer;
+      const buttons = document.querySelectorAll(`[data-env-question="${question}"]`);
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-env-answer') === answer) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+      const msg = document.getElementById(`envQuizMsg-${question}`);
+      if (msg) msg.textContent = "";
+      const bottomMsg = document.getElementById('envQuizResult');
+      if (bottomMsg) bottomMsg.textContent = "";
+    }
+
+    function submitEnvQuiz() {
+      const resultEl = document.getElementById('envQuizResult');
+      if (!resultEl) return;
+      const q1 = envQuizSelected.q1 || '';
+      const q2 = envQuizSelected.q2 || '';
+      const q3 = envQuizSelected.q3 || '';
+
+      if (!q1 || !q2 || !q3) {
+        resultEl.style.color = "#b91c1c";
+        resultEl.textContent = "모든 문제를 입력/선택해주세요.";
+        return;
+      }
+
+      const correct1 = q1 === "20";
+      const correct2 = q2 === "X";
+      const correct3 = q3 === "X";
+
+      if (correct1 && correct2 && correct3) {
+        resultEl.style.color = "#16a34a";
+        resultEl.textContent = "✅ 정답입니다!";
+        if (!envQuizComplete) {
+          envQuizComplete = true;
+          markChapterCompleted(4);
+        }
+        showEnvCelebrate();
+        closeChapter(4);
+      } else {
+        resultEl.style.color = "#b91c1c";
+        const wrong = [];
+        if (!correct1) wrong.push("1번");
+        if (!correct2) wrong.push("2번");
+        if (!correct3) wrong.push("3번");
+        resultEl.textContent = `${wrong.join(', ')} 다시 확인해주세요.`;
+      }
+    }
+
+    function selectWifiAnswer(question, answer) {
+      wifiQuizSelected[question] = answer;
+      const buttons = document.querySelectorAll(`[data-wifi-question="${question}"]`);
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-wifi-answer') === answer) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+      const msg = document.getElementById(`wifiQuizMsg-${question}`);
+      if (msg) msg.textContent = "";
+      const bottomMsg = document.getElementById('wifiQuizResult');
+      if (bottomMsg) bottomMsg.textContent = "";
+    }
+
+    function submitWifiQuiz() {
+      const resultEl = document.getElementById('wifiQuizResult');
+      if (!resultEl) return;
+      const q1 = wifiQuizSelected.q1 || '';
+      const q2 = wifiQuizSelected.q2 || '';
+      const q3 = wifiQuizSelected.q3 || '';
+
+      if (!q1 || !q2 || !q3) {
+        resultEl.style.color = "#b91c1c";
+        resultEl.textContent = "모든 문제를 선택해주세요.";
+        return;
+      }
+
+      const correct1 = q1 === "X";
+      const correct2 = q2 === "O";
+      const correct3 = q3 === "O";
+
+      if (correct1 && correct2 && correct3) {
+        resultEl.style.color = "#16a34a";
+        resultEl.textContent = "✅ 정답입니다!";
+        if (!wifiQuizComplete) {
+          wifiQuizComplete = true;
+          markChapterCompleted(5);
+          closeChapter(5);
+        }
+      } else {
+        resultEl.style.color = "#b91c1c";
+        const wrong = [];
+        if (!correct1) wrong.push("1번");
+        if (!correct2) wrong.push("2번");
+        if (!correct3) wrong.push("3번");
+        resultEl.textContent = `${wrong.join(', ')} 다시 확인해주세요.`;
+      }
+    }
+
+    function showEnvCelebrate() {
+      const overlay = document.getElementById('envCelebrate');
+      if (!overlay) return;
+      overlay.classList.add('active');
+      document.body.classList.add('modal-open');
+    }
+    function closeEnvCelebrate() {
+      const overlay = document.getElementById('envCelebrate');
+      if (!overlay) return;
+      overlay.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+
+    function showChapterCelebrate(id) {
+      const overlay = document.getElementById('chapterCelebrate');
+      const titleEl = document.getElementById('chapterCelebrateTitle');
+      const subEl = document.getElementById('chapterCelebrateSub');
+      if (!overlay || !titleEl || !subEl) return;
+      const chapterTitle = document.querySelector(`#chapter-${id} .chapter-title`)?.textContent || `챕터 ${id}`;
+      titleEl.textContent = `${chapterTitle} 완료!`;
+      subEl.textContent = "모든 항목을 확인했어요.";
+      overlay.classList.add('active');
+      document.body.classList.add('modal-open');
+    }
+    function closeChapterCelebrate() {
+      const overlay = document.getElementById('chapterCelebrate');
+      if (!overlay) return;
+      overlay.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+
+    function showMediaCelebrate() {
+      const overlay = document.getElementById('mediaCelebrate');
+      if (!overlay) return;
+      overlay.classList.add('active');
+      document.body.classList.add('modal-open');
+      setTimeout(() => closeMediaCelebrate(), 2600);
+    }
+
+    function closeMediaCelebrate() {
+      const overlay = document.getElementById('mediaCelebrate');
+      if (!overlay) return;
+      overlay.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+
+    function adjustAccordionHeight(id) {
+      const item = document.getElementById(`chapter-${id}`);
+      if (!item) return;
+      const content = item.querySelector('.accordion-content');
+      if (!content) return;
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+
+    function closeChapter(id) {
+      const item = document.getElementById(`chapter-${id}`);
+      if (!item) return;
+      const content = item.querySelector('.accordion-content');
+      item.classList.remove('open');
+      if (content) content.style.maxHeight = "0";
+    }
+
+    function fireConfetti() {
+    const colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b'];
+      for (let i = 0; i < 50; i++) {
+        const conf = document.createElement('div');
+        conf.classList.add('confetti');
+        conf.style.left = Math.random() * 100 + '%';
+        conf.style.top = -10 + 'px';
+        conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        conf.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        document.getElementById('certOverlay').appendChild(conf);
+      }
+    }
+  </script>
+
+            <!-- Mail modals -->
+            <div id="mail-1-modal" class="mail-modal">
+              <div class="mail-modal-card">
+                <div class="mail-modal-header">
+                  <div class="mail-avatar">M</div>
+                  <div class="mail-meta">
+                    <div class="from">국세청</div>
+                    <div class="subject">[국세청] 세무조사 출석요구 안내통지문</div>
+                    <div class="to">받는 사람: hometax-notice@tax-gov-mail.com</div>
+                  </div>
+                  <div style="margin-left:auto; font-size:12px; color:#94a3b8;">2023년 1월 12일 (목)</div>
+                </div>
+                <div class="mail-modal-body">
+                  <div style="border:1px solid #e2e8f0; border-radius:12px; overflow:visible; background:#ffffff; box-shadow:0 6px 18px -10px rgba(0,0,0,0.2); max-width:520px; margin:0 auto; font-size:12px; line-height:1.45;">
+                    <div style="padding:6px 10px; background:#fff7ed; border-bottom:1px solid #fb923c; display:flex; align-items:center; gap:6px; color:#9a3412;">
+                      <span style="font-weight:800; color:#b91c1c;">첨부 1개</span>
+                      <span>1.8MB</span>
+                      <span style="margin-left:auto; color:#0ea5e9;">모두저장</span>
+                    </div>
+                    <div style="padding:8px 10px; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; gap:6px; background:#fff;">
+                      <div style="width:28px; height:28px; border-radius:6px; background:#fef2f2; display:flex; align-items:center; justify-content:center; color:#b91c1c; font-weight:800; flex-shrink:0;">📄</div>
+                      <a href="#" onclick="event.preventDefault(); downloadPdf(); openLinkWarning('pdf');" style="flex:1; font-weight:700; color:#0f172a; text-decoration:none;">세무조사 신고서안내.pdf</a>
+                      <div style="color:#94a3b8;">1.8MB</div>
+                    </div>
+                    <div style="padding:8px; background:#f8fafc;">
+                      <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden;">
+                        <div style="height:6px; background:repeating-linear-gradient(90deg, #1d4ed8 0 14px, transparent 14px 24px), repeating-linear-gradient(90deg, #ef4444 0 14px, transparent 14px 24px); background-size:48px 6px, 48px 6px; background-position:0 0, 24px 0;"></div>
+                        <div style="padding:8px 10px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; gap:6px; background:#f8fafc;">
+                          <div style="font-weight:800; color:#0f172a; display:flex; align-items:center; gap:4px;">
+                            <span style="color:#2563eb;">홈택스</span>
+                            <span style="color:#94a3b8; font-weight:700;">국세청 홈택스</span>
+                          </div>
+                          <div style="width:36px; height:36px; border-radius:10px; background:#fef2f2; display:flex; align-items:center; justify-content:center; font-size:18px;">😊</div>
+                        </div>
+                        <div style="padding:10px; background:#ffffff;">
+                          <div style="font-size:15px; font-weight:900; color:#1f2937;">국세청 세무조사 신고</div>
+                          <div style="font-size:11px; color:#4b5563; margin-bottom:4px;">통지문 안내</div>
+                          <div style="display:flex; align-items:center; gap:4px; font-size:10.5px; color:#475569; margin-bottom:8px;">
+                            <span style="color:#b91c1c;">◆</span><span><strong style="color:#b91c1c;">보안메일</strong> 입니다.</span>
+                          </div>
+                          <div style="font-size:11.5px; color:#111827; line-height:1.45; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px; margin-bottom:8px;">
+                            안녕하세요. 평소 국세행정에 협조하여 주신데 감사드립니다. 우리청에서 실시 중인 귀하 세무조사 관련 사실관계 확인을 위해 문답서 작성이 필요하여 <strong>[부가가치세법] 제40조 [질문 조사]</strong>에 따라 출석을 요청드립니다. 자세한 내용은 첨부문서를 확인해주시기 바랍니다.
+                          </div>
+                          <div style="background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; padding:8px; font-size:10.5px; color:#9a3412; line-height:1.45; margin-bottom:6px;">
+                            <div style="font-weight:800;">보안메일이 보이지 않으신가요?</div>
+                            <div>개인정보 보호를 위해 암호화된 첨부파일이며, 메일 수신 비밀번호로 열람 가능합니다.</div>
+                          </div>
+                          <div style="font-size:10.5px; color:#0f172a; line-height:1.45; padding:8px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
+                            정당한 사유 없이 출석을 거부하거나 기피 시 국세기본법 제80조에 따라 2,000만원 이하 과태료가 부과될 수 있습니다.
+                          </div>
+                        </div>
+                        <div style="padding:6px 10px; background:#0f172a; color:#e2e8f0; font-size:10px; display:flex; flex-direction:column; gap:2px;">
+                          <span>서울특별시 종로구 국세청 본청 8-14 국세청 (우편번호) 30128</span>
+                          <span>Copyrightⓒ National Tax Service. All rights reserved.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mail-modal-close">
+                  <button onclick="closeMailModal('mail-1')">닫기</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="mail-2-modal" class="mail-modal">
+              <div class="mail-modal-card">
+                <div class="mail-modal-header">
+                  <div class="mail-avatar">B</div>
+                  <div class="mail-meta">
+                    <div class="from">보안팀</div>
+                    <div class="subject">[긴급] VPN 비밀번호 재설정</div>
+                    <div class="to">받는 사람: security@example.com</div>
+                  </div>
+                  <div style="margin-left:auto; font-size:12px; color:#94a3b8;">어제 오후 3:00</div>
+                </div>
+                <div class="mail-modal-body">
+                  안녕하세요. 정보보안팀입니다.<br><br>
+                  현재 VPN 비밀번호가 만료되어 재설정이 필요합니다.<br>
+                  해당 링크로 들어가 비밀번호를 변경해주시기 바랍니다.<br>
+                  링크: <a href="#" onclick="event.preventDefault(); openLinkWarning('vpn');">corp-vpn-reset.com</a><br><br>
+                  감사합니다.
+                </div>
+                <div class="mail-modal-close">
+                  <button onclick="closeMailModal('mail-2')">닫기</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="mail-3-modal" class="mail-modal">
+              <div class="mail-modal-card">
+                <div class="mail-modal-header">
+                  <div class="mail-avatar">N</div>
+                  <div class="mail-meta">
+                    <div class="from">네이버페이</div>
+                    <div class="subject">[네이버페이] 고객확인제도 정책에 따른 이행 안내입니다.</div>
+                    <div class="to">받는 사람: no-reply@pay.naver.com</div>
+                  </div>
+                  <div style="margin-left:auto; font-size:12px; color:#94a3b8;">오늘 오전 9:30</div>
+                </div>
+                <div class="mail-modal-body">
+                  <div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; background:#ffffff; max-width:560px; margin:0 auto;">
+                    <div style="padding:12px 14px 8px;">
+                      <div style="font-size:16px; font-weight:900; color:#22c55e; margin-bottom:12px; letter-spacing:0.5px;">NAVER Pay</div>
+                      <div style="font-size:18px; font-weight:900; color:#22c55e; margin-bottom:3px; line-height:1;">
+                        고객확인제도 정책에 따른<br>이행 안내입니다.
+                      </div>
+                      <div style="font-size:12px; color:#94a3b8; margin-top:0; margin-bottom:2px; line-height:1;">
+                        2025년 12월 13일 (월) 오전 6:04
+                      </div>
+                      <div style="font-size:13px; color:#374151; line-height:1.1;">
+                        네이버페이 고객확인제도 정책에 따라 이행 시점이 도래하여<br>
+                        신원확인을 위한 정보 등록 및 확인에 대한 안내 드립니다.
+                        <br>
+                        아래의 내용을 참고해주시고 고객확인제도 정보를 등록 및 확인해주시기 바랍니다.
+                      </div>
+                      <div style="margin:4px 0 2px;">
+                        <div style="font-size:13px; font-weight:900; color:#111827; margin-bottom:0;">1. 등록 및 확인</div>
+                        <div style="font-size:12px; color:#374151; line-height:1.1;">
+                          - 개인정보(이름, 성별, 생년월일, 휴대전화번호, 집주소)<br>
+                          - 직업정보
+                        </div>
+                      </div>
+                      <div style="margin:3px 0;">
+                        <div style="font-size:13px; font-weight:900; color:#111827; margin-bottom:3px;">2. 등록방법</div>
+                        <div style="font-size:12px; color:#374151; line-height:1.1;">
+                          - 설정 화면 내 고객확인제도 관리 메뉴에서 직접 등록 및 확인<br>
+                          - 네이버페이 &gt; 설정 &gt; 고객확인제도 관리
+                        </div>
+                      </div>
+                      <div style="margin:3px 0 4px;">
+                        <div style="font-size:13px; font-weight:900; color:#111827; margin-bottom:0;">3. 강화 된 고객확인제도 수행 안내</div>
+                        <div style="font-size:12px; color:#374151; line-height:1.1;">
+                          - 기본 고객확인제도 정보 등록 및 확인보다 강화 된 정보 확인이 필요한 사용자의 경우 안내 수신 이 후 60일 이내 정보 등록을 완료해주셔야 합니다.<br>
+                          기간 내 정보등록이 완료되지 않을 경우 거래가 제한 될 수 있습니다.
+                        </div>
+                      </div>
+                      <div style="font-size:12px; color:#374151; line-height:1.1; margin-bottom:3px;">
+                        사용자 편의와 개인정보 보호를 위해 최선을 다하겠습니다.<br>
+                        많은 관심과 협조 부탁드립니다.
+                        <br>
+                        감사합니다.
+                      </div>
+                      <div style="display:flex; justify-content:center; margin:6px 0 8px;">
+                        <a href="#" onclick="event.preventDefault();" style="background:#22c55e; color:#fff; text-decoration:none; height:24px; padding:0 16px; border-radius:6px; font-weight:800; font-size:13px; line-height:1; display:flex; align-items:center; justify-content:center;">
+                          고객확인제도 확인하기
+                        </a>
+                      </div>
+                      <div style="font-size:11px; color:#94a3b8; line-height:1.1; margin-bottom:3px;">
+                        본 메일은 발신전용 입니다. 네이버페이 서비스 관련 문의는 <a href="#" onclick="event.preventDefault();">고객센터</a>에서 확인해주세요.
+                      </div>
+                      <div style="font-size:11px; color:#94a3b8;">
+                        Copyright © NAVER FINANCIAL Corp. All Rights Reserved.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mail-modal-close">
+                  <button onclick="closeMailModal('mail-3')">닫기</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="mail-4-modal" class="mail-modal">
+              <div class="mail-modal-card">
+                <div class="mail-modal-header">
+                  <div class="mail-avatar">C</div>
+                  <div class="mail-meta">
+                    <div class="from">쿠팡페이</div>
+                    <div class="subject">[쿠팡페이] 보안 시스템 검사 - 계정 로그인 이상 알림</div>
+                    <div class="to">발신 주소: no-reply@coupangpay.com</div>
+                  </div>
+                  <div style="margin-left:auto; font-size:12px; color:#94a3b8;">12월 2일 (화) PM 10:41 (10일 전)</div>
+                </div>
+                <div class="mail-modal-body">
+                  <div style="border:1px solid #e2e8f0; border-radius:14px; overflow:hidden; background:#ffffff; max-width:720px; margin:0 auto; padding:18px 22px;">
+                    <div style="display:flex; align-items:center; gap:6px; margin-bottom:20px;">
+                      <span style="font-size:18px; font-weight:900; color:#c9252d; letter-spacing:0.5px;">Coupang Pay</span>
+                    </div>
+                    <div style="font-size:24px; font-weight:800; color:#111827; margin-bottom:22px;">[쿠팡페이] 보안 시스템 검사 - 계정 로그인 이상 알림</div>
+                    <div style="font-size:14px; font-weight:800; color:#111827; margin-bottom:12px;">안녕하세요, 쿠팡페이(주)입니다.</div>
+                    <div style="font-size:13px; color:#374151; line-height:1.65; margin-bottom:16px;">
+                      ▪ 최근 고객님의 계정에서 의심스러운 활동이 감지되었습니다. 안전한 사용을 위해 추가 인증이 필요합니다.<br>
+                      ▪ 지금 재인증 절차를 완료해 주세요. 그렇지 않으면 서비스 이용에 제한이 있을 수 있습니다.
+                    </div>
+                    <div style="margin:0 0 16px;">
+                      <a href="#" onclick="event.preventDefault(); openFakeAuth();" style="font-size:13px; font-weight:800; color:#2563eb; text-decoration:none;">정보 인증 페이지</a>
+                    </div>
+                    <div style="font-size:13px; font-weight:800; color:#111827; margin-bottom:10px;">재인증 시 유의사항:</div>
+                    <div style="font-size:13px; color:#374151; line-height:1.65; margin-bottom:18px;">
+                      ▪ 계정 정보가 정확하게 등록되어 있는지 확인해 주시기 바랍니다.<br>
+                      ▪ 서비스 제한이 있을 수 있으니 빠르게 재인증 절차를 완료해 주십시오.
+                    </div>
+                    <div style="border-top:1px solid #e5e7eb; margin:12px 0 14px;"></div>
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                      <span style="font-size:14px; font-weight:900; color:#c9252d;">Coupang Pay</span>
+                    </div>
+                    <div style="font-size:11px; color:#6b7280; line-height:1.6;">
+                      쿠팡페이(주) | 고객센터 대표번호 안내<br>
+                      ©Coupangpay, Ltd All rights reserved.<br>
+                      ※ 본 메일은 발신 전용이며, 메일 수신 동의 여부와 관계없이 법률에 근거하여 발송됩니다.<br>
+                      ※ 약관 개정에 동의하지 않는 경우에는 계약을 해지(탈퇴)할 수 있으며, 통지를 받은 날로부터 30일 이내로 별도의 이의를 제기하지 않는 경우 본 개정 약관에 동의한 것으로 간주합니다.
+                    </div>
+                  </div>
+                </div>
+                <div class="mail-modal-close">
+                  <button onclick="closeMailModal('mail-4')">닫기</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="mailCelebrate" class="celebrate-modal" onclick="closeMailCelebrate()">
+              <div class="celebrate-card" onclick="event.stopPropagation();">
+                <div class="celebrate-confetti">
+                  <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="celebrate-emoji">🎉</div>
+                <div class="celebrate-title">모두 정답!</div>
+                <p class="celebrate-sub">의심 메일을 완벽히 구분했어요.</p>
+                <button class="celebrate-close" onclick="closeMailCelebrate()">창 닫기</button>
+              </div>
+            </div>
+
+            <div id="mediaCelebrate" class="celebrate-modal" onclick="closeMediaCelebrate()">
+              <div class="celebrate-card" onclick="event.stopPropagation();">
+                <div class="celebrate-confetti">
+                  <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="celebrate-emoji">✅</div>
+                <div class="celebrate-title">OX 정답!</div>
+                <p class="celebrate-sub">매체제어 승인 절차를 정확히 이해했습니다.</p>
+                <button class="celebrate-close" onclick="closeMediaCelebrate()">창 닫기</button>
+              </div>
+            </div>
+
+            <div id="envCelebrate" class="celebrate-modal" onclick="closeEnvCelebrate()">
+              <div class="celebrate-card" onclick="event.stopPropagation();">
+                <div class="celebrate-confetti">
+                  <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="celebrate-emoji">🎯</div>
+                <div class="celebrate-title">보안점검 정답!</div>
+                <p class="celebrate-sub">화면보호기·공유폴더·보안점검 절차를 정확히 이해했습니다.</p>
+                <button class="celebrate-close" onclick="closeEnvCelebrate()">창 닫기</button>
+              </div>
+            </div>
+
+            <div id="chapterCelebrate" class="celebrate-modal" onclick="closeChapterCelebrate()">
+              <div class="celebrate-card" onclick="event.stopPropagation();">
+                <div class="celebrate-confetti">
+                  <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="celebrate-emoji">🎉</div>
+                <div id="chapterCelebrateTitle" class="celebrate-title">챕터 완료!</div>
+                <p id="chapterCelebrateSub" class="celebrate-sub">모든 항목을 확인했습니다.</p>
+                <button class="celebrate-close" onclick="closeChapterCelebrate()">창 닫기</button>
+              </div>
+            </div>
+
+</body>
+</html>
