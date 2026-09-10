@@ -1,0 +1,6 @@
+# 실제 설정 파일 (settings.json.example을 복사해 만든다)
+settings.json
+# 스크립트 실행 결과물
+reports/
+__pycache__/
+*.pyc

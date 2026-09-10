@@ -20,3 +20,6 @@ Dev 환경 진단·재구축으로 표준 정립 → Stage/Live 적용 → Live 
 
 ### [security-policy/2606-network-separation-relaxation](./security-policy/2606-network-separation-relaxation/) — 망분리 완화 및 대체 보호조치 체계 구축
 법령 개정을 계기로 망분리 의무 대상 여부를 법적으로 재검토 → 표준 기반 대체 보호조치 통제영역 도출 → 현황 점검·취약점 식별 → 보완 계획 수립 및 잔여위험 판단
+
+### [automation/2606-cloud-risk-assessment](./automation/2606-cloud-risk-assessment/) — 클라우드 위험평가 자동화
+위험평가 산식(R=A×T×V)의 자산가치 근거인 클라우드 자산대장 정비 → 취약성 평가를 boto3 읽기 전용 자동화 도구로 자체 개발 → 자동 산정 결과와 정식 위험평가 보고서 체계의 정합성 점검
