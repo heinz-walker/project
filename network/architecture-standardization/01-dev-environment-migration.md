@@ -19,7 +19,7 @@ Dev VPC의 Network Firewall 아키텍처를 최초 진단부터 실제 재구축
 | --- | --- |
 | 작성일 | 2026-07-07 (최초 진단: 2026-07-01) |
 | 대상 VPC | Dev VPC (`<dev-vpc-cidr>`) |
-| 대상 리전 | ap-northeast-2 (서울) |
+| 대상 리전 | 회사 계정의 주 운영 리전 |
 | 목적 | Dev VPC의 Network Firewall 아키텍처를 최초 진단부터 실제 재구축, 검증까지 전 과정을 기록. 이 과정에서 도출된 표준은 별도 표준 아키텍처 문서로 정리함 |
 | 확인 방식 | AWS CLI 직접 조회, AWS 공식 문서/블로그 리서치, 실제 EC2 테스트 및 CloudWatch Logs 검증 |
 

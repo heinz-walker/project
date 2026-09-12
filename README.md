@@ -17,19 +17,28 @@ AWS 환경 네트워크 아키텍처 설계·운영
   5. [Live 방화벽 인라인 전환 시도와 롤백](./network/architecture-standardization/05-live-cutover-attempt-and-rollback.md) — Live 적용 계획을 실제 트래픽 위에서 실행한 컷오버 시도. 점검 당일 원인 불명 장애가 겹쳐, 안전을 우선해 방화벽 라우팅만 롤백하고 점검을 종료했다.
   6. [Stage 환경 표준 적용 이후 운영 개선](./network/architecture-standardization/06-stage-infra-improvement.md) — 표준 적용 후 Stage를 운영하며 드러난 후속 문제 세 가지(배포 경로 정리, 방화벽 규칙 평가 순서 결함, ALB 서브넷 분리)를 다뤘다.
 
+- **[리전 간 인프라 이관](./network/cross-region-migration/)** — IaC 구조 설계 검토 → 이관 계획 수립 → 네트워크 기반 리소스 Import 실행 → 재검증으로 드러난 누락 발견·수정 → 애플리케이션 헬스체크 근본원인 조사 → 파생된 보안 후속조치(패치 자동화)
+
+  1. [OpenTofu 프로젝트 구조 검토](./network/cross-region-migration/01-opentofu-project-structure-review.md) — 이관에 앞서 기존 코드의 state 구조를 대안들과 비교 검토하고 현재 구조 유지를 결정했다.
+  2. [이관 계획과 보안 기준](./network/cross-region-migration/02-migration-plan-and-security-baseline.md) — 기존 대상 리전 VPC를 재사용하는 방침, 준수해야 할 사내 보안 운영 원칙, 원본 리전 현황 조사와 이전 우선순위를 정리했다.
+  3. [네트워크 Import 실행](./network/cross-region-migration/03-network-import-execution.md) — 대상 리전 VPC 기반 리소스를 state로 편입하고 데이터/컴퓨트를 이관한 뒤, 공유 Bastion VPC까지 같은 방식으로 코드화했다.
+  4. [이관 후 발견된 누락과 재검증](./network/cross-region-migration/04-post-migration-gap-and-recheck.md) — "완료"됐던 EC2 이관이 실제로는 Auto Scaling Group 구성을 반영하지 못했다는 지적을 계기로 재조사하고 바로잡았다.
+  5. [애플리케이션 헬스체크 근본원인 조사](./network/cross-region-migration/05-application-healthcheck-root-cause.md) — Auto Scaling Group 전환 이후 발생한 헬스체크 실패를 인스턴스 직접 접속으로 조사해 두 가지 근본 원인을 규명했다.
+  6. [패치 자동화 후속조치](./network/cross-region-migration/06-patch-automation-followup.md) — 이관 과정에서 발견한 Bastion 인스턴스의 장기 미패치 문제를, 아웃바운드를 다시 열지 않고 Patch Manager로 해결한 과정을 다뤘다.
+
 ### [poc/security-review](./poc/security-review/) — PoC·벤더 검토
 솔루션 도입 전 후보 비교·검증
 
-- [DLP 솔루션 도입 평가](./poc/security-review/2407-dlp-adoption/) — 후보 조사 → 1차 정량 평가 → 평가 방법론 자체 검증·개정 → 상위 후보 재검증(PoC) → 가격 대비 종합 판단으로 최종 선정
+- [DLP 솔루션 도입 평가](./poc/security-review/dlp-adoption/) — 후보 조사 → 1차 정량 평가 → 평가 방법론 자체 검증·개정 → 상위 후보 재검증(PoC) → 가격 대비 종합 판단으로 최종 선정
 
 ### [security-policy](./security-policy/) — 보안 정책·체계
 법령 개정이나 조직 변화에 따른 보안 정책·통제 체계 수립
 
-- [망분리 완화 및 대체 보호조치 체계 구축](./security-policy/2606-network-separation-relaxation/) — 법령 개정을 계기로 망분리 의무 대상 여부를 법적으로 재검토 → 표준 기반 대체 보호조치 통제영역 도출 → 현황 점검·취약점 식별 → 보완 계획 수립 및 잔여위험 판단
+- [망분리 완화 및 대체 보호조치 체계 구축](./security-policy/network-separation-relaxation/) — 법령 개정을 계기로 망분리 의무 대상 여부를 법적으로 재검토 → 표준 기반 대체 보호조치 통제영역 도출 → 현황 점검·취약점 식별 → 보완 계획 수립 및 잔여위험 판단
 
 ### [automation](./automation/) — 자동화
 반복 업무나 수동 점검을 스크립트·웹앱으로 자동화한 프로젝트
 
-- [인터랙티브 사내 정보보안 교육 웹앱](./automation/2512-security-awareness-training/) — 문서·슬라이드 배포 대신 실습·퀴즈로 진행하는 인터랙티브 교육을 Google Apps Script + HTML/CSS/JS로 개발했다. [인터랙티브 데모](https://heinz-walker.github.io/project/security-training/)
-- [전자결재·보안 이벤트 슬랙 알림 봇](./automation/2603-approval-alert-bot/) — 결재 시스템이 보내는 메일을 입력으로 삼아 JSON 규칙 DSL로 매칭하고, 담당자를 멘션한 슬랙 메시지(승인·반려·문서 열기 버튼 포함)로 라우팅했다. 비개발자용 브라우저 규칙 빌더와 오프라인 테스트 하니스를 함께 만들었다.
-- [클라우드 위험평가 자동화](./automation/2606-cloud-risk-assessment/) — 위험평가 산식(R=A×T×V)의 자산가치 근거인 클라우드 자산대장을 정비하고, 취약성 평가를 boto3 읽기 전용 도구로 자체 개발해 자동 산정 결과와 정식 위험평가 보고서 체계의 정합성을 점검했다.
+- [인터랙티브 사내 정보보안 교육 웹앱](./automation/security-awareness-training/) — 문서·슬라이드 배포 대신 실습·퀴즈로 진행하는 인터랙티브 교육을 Google Apps Script + HTML/CSS/JS로 개발했다. [인터랙티브 데모](https://heinz-walker.github.io/project/security-training/)
+- [전자결재·보안 이벤트 슬랙 알림 봇](./automation/approval-alert-bot/) — 결재 시스템이 보내는 메일을 입력으로 삼아 JSON 규칙 DSL로 매칭하고, 담당자를 멘션한 슬랙 메시지(승인·반려·문서 열기 버튼 포함)로 라우팅했다. 비개발자용 브라우저 규칙 빌더와 오프라인 테스트 하니스를 함께 만들었다.
+- [클라우드 위험평가 자동화](./automation/cloud-risk-assessment/) — 위험평가 산식(R=A×T×V)의 자산가치 근거인 클라우드 자산대장을 정비하고, 취약성 평가를 boto3 읽기 전용 도구로 자체 개발해 자동 산정 결과와 정식 위험평가 보고서 체계의 정합성을 점검했다.
