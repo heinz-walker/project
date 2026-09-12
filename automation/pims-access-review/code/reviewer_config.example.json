@@ -1,0 +1,130 @@
+{
+  "user_aliases": {
+    "AROAEXAMPLE00000000:hong.gildong": "hong.gildong",
+    "AROAEXAMPLE00000001:choonhyang.sung": "choonhyang.sung"
+  },
+  "authorized_users": {
+    "hong.gildong": {
+      "display_name": "홍길동",
+      "department": "보안팀"
+    },
+    "choonhyang.sung": {
+      "display_name": "성춘향",
+      "department": "개발팀"
+    },
+    "mongryong.lee": {
+      "display_name": "이몽룡",
+      "department": "개발팀"
+    }
+  },
+  "allowed_ips": [
+    "203.0.113.10",
+    "203.0.113.11"
+  ],
+  "allowed_ip_cidrs": [
+    "198.51.100.0/24"
+  ],
+  "ip_labels": {
+    "203.0.113.10": "사무실망",
+    "203.0.113.11": "재택 VPN"
+  },
+  "holidays": [
+    "2026-01-01",
+    "2026-03-01",
+    "2026-05-05",
+    "2026-06-06",
+    "2026-08-15",
+    "2026-10-03",
+    "2026-10-09",
+    "2026-12-25"
+  ],
+  "after_hours_approvals": {
+    "example-session-id-0000000000000000a": {
+      "status": "이상없음(양호)",
+      "reason": "장애 대응을 위한 사전 승인된 야간 접속",
+      "remark": "티켓 번호 EXAMPLE-1234 참조"
+    }
+  },
+  "after_hours_auto_rules": [
+    {
+      "user_authorized": "Y",
+      "status": "이상없음(양호)",
+      "reason": "인가 사용자의 업무 목적 접속 확인",
+      "remark": "담당자 확인"
+    }
+  ],
+  "webapp_authorized_users": {
+    "hong.gildong": {
+      "display_name": "홍길동"
+    },
+    "choonhyang.sung": {
+      "display_name": "성춘향"
+    }
+  },
+  "webapp_after_hours_auto_rules": [
+    {
+      "status": "확인 필요",
+      "reason": "웹앱 업무시간 외 로그인 이력",
+      "remark": "업무 목적 또는 승인 근거 확인 필요"
+    }
+  ],
+  "command_approvals": {
+    "example-session-id-0000000000000000b": {
+      "status": "이상없음(양호)",
+      "reason": "DB 마이그레이션 작업으로 사전 승인된 명령",
+      "remark": "변경관리 티켓 EXAMPLE-5678 참조"
+    }
+  },
+  "command_auto_rules": [
+    {
+      "risk_flags": "privilege_change",
+      "command_regex": "sudo su - example-service-account$",
+      "status": "이상없음(양호)",
+      "reason": "운영 표준 계정 전환 패턴",
+      "remark": "사전 정의된 승인 패턴"
+    },
+    {
+      "status": "이상없음(양호)",
+      "reason": "인가 사용자의 업무 목적 명령 확인",
+      "remark": "담당자 확인"
+    }
+  ],
+  "blocked_approvals": {
+    "example-event-id-0000000000000000c": {
+      "status": "이상없음(양호)",
+      "reason": "MFA 미설정 단말의 정상 차단",
+      "remark": "재발급 절차 안내 완료"
+    }
+  },
+  "blocked_auto_rules": [
+    {
+      "error_code": "AccessDenied",
+      "user_authorized": "Y",
+      "status": "확인 필요",
+      "reason": "인가 사용자이나 세션 정책으로 차단된 사례",
+      "remark": "세션 정책 재검토 필요"
+    },
+    {
+      "error_code": "TargetNotConnected",
+      "error_message_regex": "not connected",
+      "status": "이상없음(양호)",
+      "reason": "인스턴스 SSM 에이전트 미기동 상태에서의 정상 차단",
+      "remark": "인프라팀 확인 완료"
+    },
+    {
+      "error_code": "AccessDenied",
+      "status": "확인 필요",
+      "reason": "비인가 사용자의 접속 시도 차단",
+      "remark": "-"
+    },
+    {
+      "error_code": "ThrottlingException",
+      "status": "이상없음(양호)",
+      "reason": "API 호출 제한에 의한 일시적 차단",
+      "remark": "재시도로 정상 접속 확인"
+    }
+  ],
+  "service_labels": {
+    "i-0000000000example": "예시 서비스 bastion 경유 대상"
+  }
+}

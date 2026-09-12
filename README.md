@@ -41,4 +41,5 @@ AWS 환경 네트워크 아키텍처 설계·운영
 
 - [인터랙티브 사내 정보보안 교육 웹앱](./automation/security-awareness-training/) — 문서·슬라이드 배포 대신 실습·퀴즈로 진행하는 인터랙티브 교육을 Google Apps Script + HTML/CSS/JS로 개발했다. [인터랙티브 데모](https://heinz-walker.github.io/project/security-training/)
 - [전자결재·보안 이벤트 슬랙 알림 봇](./automation/approval-alert-bot/) — 결재 시스템이 보내는 메일을 입력으로 삼아 JSON 규칙 DSL로 매칭하고, 담당자를 멘션한 슬랙 메시지(승인·반려·문서 열기 버튼 포함)로 라우팅했다. 비개발자용 브라우저 규칙 빌더와 오프라인 테스트 하니스를 함께 만들었다.
+- [개인정보처리시스템(PIMS) 접속 이력 감사 자동화](./automation/pims-access-review/) — bastion 접속 로그와 게임 서비스 관리툴 로그를 매월 수집·상관분석해, 반복되는 정상 패턴은 규칙 엔진으로 자동 판정하고 사람은 예외만 검토하게 만들었다.
 - [클라우드 위험평가 자동화](./automation/cloud-risk-assessment/) — 위험평가 산식(R=A×T×V)의 자산가치 근거인 클라우드 자산대장을 정비하고, 취약성 평가를 boto3 읽기 전용 도구로 자체 개발해 자동 산정 결과와 정식 위험평가 보고서 체계의 정합성을 점검했다.

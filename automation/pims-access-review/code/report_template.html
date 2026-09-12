@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>$report_title</title>
+</head>
+<body style="font-family:'Malgun Gothic','맑은 고딕',sans-serif;color:#111;line-height:1.5;margin:24px;font-size:13px;">
+  <h1 style="margin:0 0 12px;font-weight:700;text-align:center;font-size:28px;margin-bottom:28px;">$report_title</h1>
+
+  <h2 style="margin:0 0 12px;font-weight:700;font-size:20px;margin-top:28px;border-left:4px solid #111;padding-left:10px;">1. 개요</h2>
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 18px;">
+    <colgroup>
+      <col style="width: 16%">
+      <col style="width: 54%">
+      <col style="width: 30%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">항목</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">내용</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토 기간</th>
+        <td style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;">$review_period</td>
+        <td style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;"></td>
+      </tr>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토 범위</th>
+        <td style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;">$scope_html</td>
+        <td style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;">$scope_note</td>
+      </tr>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토 항목</th>
+        <td style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;">$review_items_html</td>
+        <td style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;">$review_item_note</td>
+      </tr>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토 기준</th>
+        <td style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;">$criteria_html</td>
+        <td style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;">$criteria_note</td>
+      </tr>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">로그 출처</th>
+        <td style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;">$log_sources_html</td>
+        <td style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;">$log_source_note</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 18px;">
+    <colgroup>
+      <col style="width: 34%">
+      <col style="width: 10%">
+      <col style="width: 18%">
+      <col style="width: 38%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">항목</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">건수</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토결과</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      $summary_rows
+    </tbody>
+  </table>
+
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 18px;">
+    <colgroup>
+      <col style="width: 16%">
+      <col style="width: 84%">
+    </colgroup>
+    <tbody>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">특이 사항</th>
+        <td style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;">$special_notes_html</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="margin:0 0 12px;font-weight:700;font-size:20px;margin-top:28px;border-left:4px solid #111;padding-left:10px;">2. 검토 결과 상세</h2>
+
+  <h3 style="margin:0 0 12px;font-weight:700;font-size:16px;margin-top:18px;">2.1. 개인정보처리시스템(웹앱) 로그 검토 요약</h3>
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 18px;">
+    <thead>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">서비스</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">로그인 건수</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">업무시간 외 로그인</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">민감 처리행위</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토결과</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토 요약</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      $webapp_summary_rows
+    </tbody>
+  </table>
+
+  <h3 style="margin:0 0 12px;font-weight:700;font-size:16px;margin-top:18px;">2.2. 개인정보처리시스템(웹앱) 비인가자 접속 이력</h3>
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 18px;">
+    <thead>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">서비스</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">탐지시간</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">성명 / ID</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">접속 IP</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토결과</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토 요약</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      $webapp_unauthorized_rows
+    </tbody>
+  </table>
+
+  <h3 style="margin:0 0 12px;font-weight:700;font-size:16px;margin-top:18px;">2.3. 개인정보처리시스템(웹앱) 업무시간 외 접속 이력</h3>
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 18px;">
+    <thead>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">서비스</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">탐지시간</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">성명 / ID</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">접속 IP</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토결과</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토 요약</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      $webapp_after_hours_rows
+    </tbody>
+  </table>
+
+  <h3 style="margin:0 0 12px;font-weight:700;font-size:16px;margin-top:18px;">2.4. 개인정보처리시스템(웹앱) 주요 처리행위</h3>
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 18px;">
+    <thead>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">서비스</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">탐지시간</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">성명 / ID</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">접속 IP</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토결과</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토 요약</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      $webapp_sensitive_rows
+    </tbody>
+  </table>
+
+  <h3 style="margin:0 0 12px;font-weight:700;font-size:16px;margin-top:18px;">2.5. 개인정보처리시스템(웹앱) 검토 한계</h3>
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 18px;">
+    <thead>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">항목</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">내용</th>
+      </tr>
+    </thead>
+    <tbody>
+      $webapp_limit_rows
+    </tbody>
+  </table>
+
+  <h2 style="margin:0 0 12px;font-weight:700;font-size:20px;margin-top:28px;border-left:4px solid #111;padding-left:10px;">3. Bastion Host 검토 결과</h2>
+
+  <h3 style="margin:0 0 12px;font-weight:700;font-size:16px;margin-top:18px;">3.1. 비인가자 접속 성공 유무 검토</h3>
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 18px;">
+    <thead>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">서비스</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">탐지시간</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">성명 / ID</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">접속 IP</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토결과</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토 요약</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      $unauthorized_rows
+    </tbody>
+  </table>
+
+  <h3 style="margin:0 0 12px;font-weight:700;font-size:16px;margin-top:18px;">3.2. 업무시간 외 접속 이력 검토</h3>
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 18px;">
+    <thead>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">서비스</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">탐지시간</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">성명 / ID</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">접속 IP</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토결과</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토 요약</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      $after_hours_rows
+    </tbody>
+  </table>
+
+  <h3 style="margin:0 0 12px;font-weight:700;font-size:16px;margin-top:18px;">3.3. 과도한 명령어 수행 여부 검토</h3>
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 18px;">
+    <colgroup>
+      <col style="width: 28%">
+      <col style="width: 12%">
+      <col style="width: 20%">
+      <col style="width: 40%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">위험 패턴</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">건수</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토결과</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      $risky_rows
+    </tbody>
+  </table>
+
+  <h3 style="margin:0 0 12px;font-weight:700;font-size:16px;margin-top:18px;">3.4. 불필요 접근시도 차단 현황</h3>
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 18px;">
+    <thead>
+      <tr>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">서비스</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">탐지시간</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">성명 / ID</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">접속 IP</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토결과</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">검토 요약</th>
+        <th style="border:1px solid #222;padding:8px 10px;vertical-align:top;word-break:break-word;background:#f2f2f2;text-align:center;">비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      $blocked_rows
+    </tbody>
+  </table>
+
+  <p style="margin:6px 0;font-size:12px;color:#444;">$footer_note</p>
+</body>
+</html>

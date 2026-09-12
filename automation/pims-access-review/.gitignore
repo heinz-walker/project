@@ -1,0 +1,6 @@
+# 실제 설정 파일 (reviewer_config.example.json을 복사해 만든다)
+code/reviewer_config.json
+# 스크립트 실행 결과물
+*.xlsx
+data/
+__pycache__/
