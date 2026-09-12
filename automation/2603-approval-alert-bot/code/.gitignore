@@ -1,0 +1,7 @@
+credentials.json
+alert_slack/config.json
+alert_slack/users.json
+*.eml
+__pycache__/
+*.py[cod]
+.DS_Store

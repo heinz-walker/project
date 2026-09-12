@@ -1,0 +1,4 @@
+{
+    "me": { "name": "MANAGER_NAME", "slack_id": "UXXXXXXX" },
+    "leader": { "name": "LEADER_NAME", "slack_id": "UXXXXXXX" }
+}

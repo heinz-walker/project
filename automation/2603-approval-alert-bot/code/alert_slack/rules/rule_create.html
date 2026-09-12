@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>JSON Rule Builder - Layout Engine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #1a1d21; --bg-card: #222529; --accent: #36c5f0; 
+            --slack-green: #2eb67d; --slack-red: #e01e5a; --text-main: #d1d2d3;
+            --border: #383d43; --input-bg: #2a2d32;
+        }
+        body { font-family: 'Pretendard', sans-serif; background: var(--bg-dark); color: var(--text-main); margin: 0; display: grid; grid-template-columns: 480px 680px 1fr; height: 100vh; overflow: hidden; }
+        
+        .editor-panel { padding: 25px; background: var(--bg-card); border-right: 1px solid var(--border); overflow-y: auto; }
+        .preview-panel { padding: 40px 30px; display: flex; flex-direction: column; align-items: center; gap: 20px; overflow-y: auto; }
+        .eml-side { padding: 25px; background: #1f2328; border-left: 1px solid var(--border); overflow-y: auto; }
+        
+        h2 { font-size: 1.1rem; color: var(--accent); margin-top: 0; display: flex; align-items: center; gap: 10px; }
+        .form-group { margin-bottom: 16px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-span { grid-column: 1 / -1; }
+        .card { background: #1f2328; border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+        .step-title { display: flex; align-items: center; gap: 8px; font-weight: 700; margin: 2px 0 10px; }
+        .step-dot { width: 20px; height: 20px; border-radius: 999px; background: var(--accent); color: #0b1116; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; }
+        .helper { font-size: 12px; color: #9aa0a6; margin-top: 6px; }
+        label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 6px; color: #ababad; text-transform: uppercase; }
+        input, select, textarea { 
+            width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 10px; 
+            color: white; border-radius: 6px; font-size: 13px; outline: none; box-sizing: border-box;
+        }
+        
+        /* Layout Toggle */
+        .layout-selector { display: flex; gap: 10px; margin-bottom: 15px; }
+        .layout-btn { flex: 1; padding: 10px; border: 1px solid var(--border); background: var(--input-bg); color: white; border-radius: 6px; cursor: pointer; font-size: 12px; }
+        .layout-btn.active { border-color: var(--accent); background: rgba(54, 197, 240, 0.1); color: var(--accent); }
+
+        .link-card { background: #2c3036; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid var(--border); position: relative; display: grid; grid-template-columns: 1.2fr 0.8fr 1.6fr; gap: 8px; align-items: center; }
+        .btn-add { width: 100%; padding: 8px; background: transparent; border: 1px dashed var(--accent); color: var(--accent); border-radius: 6px; cursor: pointer; margin-top: 10px; }
+        .remove-link { position: absolute; top: 5px; right: 5px; background: none; border: none; color: #ff4757; cursor: pointer; }
+
+        /* Slack Preview Styles */
+        .slack-mockup { background: white; color: #1d1c1d; width: 100%; max-width: 580px; padding: 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .bot-profile { display: flex; gap: 12px; }
+        .bot-avatar { width: 36px; height: 36px; background: #001529; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .bot-name { font-weight: 900; }
+        
+        .slack-body { margin-top: 8px; }
+        .msg-quote { border-left: 4px solid #e8e8e8; padding-left: 12px; margin: 8px 0; font-size: 14px; line-height: 1.5; }
+        .msg-quote .md-strong { font-weight: 800; }
+        
+        /* 세로 모드 스타일 */
+        .vertical-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        
+        /* 가로 모드 버튼 그룹 */
+        .action-group { display: flex; gap: 8px; margin-top: 10px; }
+        
+        .s-btn { 
+            padding: 6px 14px; border-radius: 4px; font-weight: bold; font-size: 13px; border: 1px solid #ddd; 
+            cursor: pointer; background: #f8f8f8; color: #1d1c1d;
+        }
+        .s-btn-primary { background: #007a5a; color: white; border: none; }
+        .s-btn-danger { background: #e01e5a; color: white; border: none; }
+
+        pre { 
+            width: 100%; max-width: 580px; background: #282c34; padding: 15px; border-radius: 8px; 
+            color: #abb2bf; font-size: 12px; border: 1px solid var(--border); overflow-x: auto;
+        }
+        .btn-download { width: 100%; max-width: 580px; padding: 15px; background: var(--slack-green); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .divider { height: 1px; background: var(--border); margin: 18px 0; }
+        .muted { color: #9aa0a6; font-size: 12px; }
+        .mini { font-size: 12px; }
+        .eml-panel { background: #1f2226; border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+        .eml-links { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+        .eml-link { display: grid; grid-template-columns: 180px 1fr 120px 90px; gap: 10px; align-items: center; background: #272b31; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); }
+        .eml-link select { background: var(--input-bg); border: 1px solid var(--border); color: white; border-radius: 4px; font-size: 12px; padding: 6px; }
+        .eml-link button { background: var(--accent); color: #0b1116; border: none; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+        .eml-link input { background: var(--input-bg); border: 1px solid var(--border); padding: 8px; color: white; border-radius: 4px; font-size: 12px; min-width: 160px; }
+        .eml-head { display: grid; grid-template-columns: 180px 1fr 120px 90px; gap: 10px; font-size: 11px; color: #9aa0a6; margin-top: 8px; }
+        .eml-head div { background: #1a1d21; border: 1px dashed var(--border); border-radius: 4px; padding: 4px 6px; }
+        .eml-lines { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+        .eml-line { display: grid; grid-template-columns: 1fr 90px; gap: 10px; align-items: center; background: #272b31; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); }
+        .eml-line button { background: var(--accent); color: #0b1116; border: none; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+        .eml-preview { height: 220px; width: 100%; border: 1px solid var(--border); border-radius: 6px; background: white; color: #111; overflow: auto; }
+        .eml-preview iframe { width: 100%; height: 100%; border: 0; }
+        .eml-info { font-size: 12px; color: #c6c9cc; margin-top: 8px; }
+        .eml-info-row { display: grid; grid-template-columns: 80px 1fr; gap: 8px; padding: 4px 0; border-bottom: 1px dashed #2e3338; }
+        .eml-info-row:last-child { border-bottom: 0; }
+
+        @media (max-width: 1200px) {
+            body { grid-template-columns: 1fr; height: auto; }
+            .editor-panel, .preview-panel, .eml-side { border: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="editor-panel">
+    <h2><i class="fa-solid fa-layer-group"></i> Rule & Layout Builder <span class="muted">v2026-03-27a</span></h2>
+    
+    <div class="card form-group">
+        <div class="step-title"><span class="step-dot">1</span> Import</div>
+        <input type="file" id="import_file" accept=".json,.eml" />
+        <div style="display:flex; gap:8px; margin-top:8px;">
+            <button class="btn-add" onclick="resetForm()" style="padding:6px 10px; border-style:solid;">초기화</button>
+        </div>
+        <div class="muted" id="import_meta" style="margin-top:8px;">JSON 또는 EML 파일을 업로드하세요.</div>
+        <div class="muted" id="json_meta" style="margin-top:4px;"></div>
+        <div class="muted" id="eml_meta" style="margin-top:4px;"></div>
+    </div>
+
+    <div class="card form-group form-grid">
+        <div class="form-span step-title"><span class="step-dot">2</span> 기본 정보</div>
+        <div class="form-span">
+            <label>코멘트</label>
+            <input type="text" id="rule_comment" placeholder="이 룰의 용도를 설명하세요 (예: 결재진행-리더 알림)" oninput="render()">
+        </div>
+        <div>
+            <label>메일 라벨</label>
+            <input type="text" id="target_label" placeholder="메일 라벨을 입력하세요 (예: #Archive/Approval_Alert)" oninput="render()">
+        </div>
+        <div>
+            <label>제목 키워드</label>
+            <input type="text" id="filter_keyword" placeholder="제목 키워드를 입력하세요" oninput="render()">
+        </div>
+        <div class="form-span helper">제목 키워드는 메일 제목에 포함된 단어입니다. 라벨은 IMAP 폴더명입니다.</div>
+    </div>
+
+    <div class="card form-group">
+        <div class="step-title"><span class="step-dot">3</span> 조건 설정</div>
+        <div class="form-grid">
+            <div>
+                <label>기본 조건</label>
+                <select id="check_field" onchange="render()">
+                    <option value="always_pass">조건 없음 (모든 메일)</option>
+                    <option value="drafter">기안자 기준</option>
+                    <option value="approver">결재자 기준</option>
+                </select>
+            </div>
+            <div>
+                <label>대상 사용자</label>
+                <select id="compare_with" onchange="render()">
+                    <option value="me">나 (me)</option>
+                    <option value="leader">팀장님 (leader)</option>
+                    <option value="any">임직원 (누구나)</option>
+                    <option value="custom">직접 입력</option>
+                </select>
+            </div>
+            <div class="form-span" id="compare_name_wrap" style="display:none;">
+                <label>직접 입력 이름</label>
+                <input type="text" id="compare_name" placeholder="예: 홍길동, 성춘향, 이몽룡" oninput="render()">
+                <div class="helper">쉼표(,)로 여러 이름을 입력할 수 있습니다. 입력한 이름 중 하나가 메일 본문 또는 추출된 기안자/결재자 정보와 일치하면 탐지합니다.</div>
+            </div>
+            <div class="form-span">
+                <label style="margin-top:10px; text-transform:none;">
+                    <input type="checkbox" id="use_second_check" onchange="render()" style="width:auto; margin-right:6px;">
+                    두 번째 조건 사용
+                </label>
+            </div>
+            <div>
+                <label>두 번째 조건</label>
+                <select id="second_check_field" onchange="render()">
+                    <option value="drafter">기안자</option>
+                    <option value="approver">결재자</option>
+                </select>
+            </div>
+            <div>
+                <label>두 번째 대상 사용자</label>
+                <select id="second_compare_with" onchange="render()">
+                    <option value="me">나 (me)</option>
+                    <option value="leader">팀장님 (leader)</option>
+                    <option value="any">임직원 (누구나)</option>
+                    <option value="custom">직접 입력</option>
+                </select>
+            </div>
+            <div class="form-span" id="second_compare_name_wrap" style="display:none;">
+                <label>두 번째 직접 입력 이름</label>
+                <input type="text" id="second_compare_name" placeholder="예: 홍길동, 성춘향, 이몽룡" oninput="render()">
+                <div class="helper">쉼표(,)로 여러 이름을 입력할 수 있습니다. 두 번째 조건에서도 입력한 이름 중 하나가 메일 본문에 포함되면 매칭됩니다.</div>
+            </div>
+        </div>
+        <div class="helper">조건 없음은 모든 메일에 알림을 보냅니다. 기안자/결재자 기준은 선택한 사용자와 일치할 때만 알림이 뜹니다.</div>
+    </div>
+
+    <div class="card form-group">
+        <div class="step-title"><span class="step-dot">4</span> EML 미리보기</div>
+        <div class="eml-info" id="eml_info">
+            <div class="eml-info-row"><div>제목</div><div>-</div></div>
+            <div class="eml-info-row"><div>보낸사람</div><div>-</div></div>
+            <div class="eml-info-row"><div>받는사람</div><div>-</div></div>
+        </div>
+        <div class="eml-preview" style="margin-top:10px;">
+            <iframe id="eml_iframe" sandbox></iframe>
+        </div>
+    </div>
+</div>
+
+    <div class="eml-side">
+        <h2><i class="fa-solid fa-slack"></i> Slack 메시지</h2>
+        <div class="eml-panel">
+            <div class="step-title"><span class="step-dot">1</span> 표시/문구 설정</div>
+            <label>규칙 이름</label>
+            <input type="text" id="rule_name" placeholder="규칙 이름을 입력하세요" oninput="render()">
+            <label style="margin-top:8px;">헤더 문구</label>
+            <input type="text" id="header_text" value="*🛡️ {rule_name} 도착*" placeholder="예: *🛡️ {rule_name} 도착*" oninput="render()">
+            <div class="helper" id="header_preview" style="margin-top:6px;">표시 예시: -</div>
+            <div class="helper">사용 가능 변수: {rule_name}</div>
+            <label style="text-transform:none; margin-top:8px;">
+                <input type="checkbox" id="show_header" onchange="render()" style="width:auto; margin-right:6px;" checked>
+                헤더 문구 표시
+            </label>
+            <div style="display:flex; gap:16px; align-items:center; margin-top:10px; flex-wrap:wrap;">
+                <label style="text-transform:none;">
+                    <input type="checkbox" id="show_subject" onchange="render()" style="width:auto; margin-right:6px;" checked>
+                    메일 제목 표시
+                </label>
+                <label style="text-transform:none;">
+                    <input type="checkbox" id="show_drafter" onchange="render()" style="width:auto; margin-right:6px;" checked>
+                    기안자 표시
+                </label>
+                <label style="text-transform:none;">
+                    <input type="checkbox" id="show_approver" onchange="render()" style="width:auto; margin-right:6px;">
+                    결재자 표시
+                </label>
+                <label style="text-transform:none;">
+                    <input type="checkbox" id="show_mention" onchange="render()" style="width:auto; margin-right:6px;" checked>
+                    담당자 확인 표시
+                </label>
+            </div>
+            <div class="form-grid" style="margin-top:10px;">
+                <div>
+                    <label>메일 제목 라벨</label>
+                    <input type="text" id="label_subject" value="메일 제목" placeholder="메일 제목" oninput="render()">
+                </div>
+                <div>
+                    <label>기안자 라벨</label>
+                    <input type="text" id="label_drafter" value="기안자" placeholder="기안자" oninput="render()">
+                </div>
+                <div>
+                    <label>결재자 라벨</label>
+                    <input type="text" id="label_approver" value="결재자" placeholder="결재자" oninput="render()">
+                </div>
+                <div>
+                    <label>담당자 라벨</label>
+                    <input type="text" id="label_mention" value="담당자 확인" placeholder="담당자 확인" oninput="render()">
+                </div>
+            </div>
+            <label style="margin-top:8px;">담당자 확인 문구</label>
+            <input type="text" id="mention_template" value="• *{label_mention}:* {mention}" placeholder="예: • *{label_mention}:* {mention}" oninput="render()">
+            <label style="margin-top:8px;">추가 문구 (한 줄에 하나)</label>
+            <textarea id="extra_lines" rows="3" placeholder="예: 요청유형: 보안예외&#10;비고: 긴급" oninput="render()"></textarea>
+            <label style="margin-top:8px;">메시지 스타일</label>
+            <select id="message_style" onchange="render()">
+                <option value="default">기본 메시지</option>
+                <option value="blockquote">Blockquote</option>
+            </select>
+
+            <div class="divider"></div>
+
+            <div class="step-title"><span class="step-dot">2</span> 레이아웃</div>
+            <div class="layout-selector">
+                <button class="layout-btn active" id="mode-hor" onclick="setMode('horizontal')"><i class="fa-solid fa-grip-lines"></i> 가로 배치</button>
+                <button class="layout-btn" id="mode-ver" onclick="setMode('vertical')"><i class="fa-solid fa-grip-lines-vertical"></i> 세로 배치</button>
+            </div>
+            <div class="helper">버튼이 메시지 옆(가로) 또는 아래(세로)로 배치됩니다.</div>
+
+            <div class="divider"></div>
+
+            <div class="step-title"><span class="step-dot">3</span> 버튼 구성</div>
+            <div class="helper" style="margin-bottom:8px;">버튼명과 링크(키워드 또는 URL)를 입력하세요.</div>
+            <div id="links-container"></div>
+            <button class="btn-add" onclick="addLinkField()"><i class="fa-solid fa-plus"></i> Add Button</button>
+            <div class="helper">EML Import에서 링크를 선택해 버튼을 자동 생성할 수 있습니다.</div>
+
+            <div class="divider"></div>
+
+            <div class="step-title"><span class="step-dot">4</span> EML 링크</div>
+            <div class="eml-head">
+                <div>링크</div>
+                <div style="flex:2;">버튼명(수정)</div>
+                <div>링크 타입</div>
+                <div>추가</div>
+            </div>
+            <div class="eml-links" id="eml_links"></div>
+
+            <div class="divider"></div>
+            <div class="step-title"><span class="step-dot">5</span> 본문 문구</div>
+            <div class="eml-head" style="grid-template-columns: 1fr 90px;">
+                <div>문구</div>
+                <div>추가</div>
+            </div>
+            <div class="eml-lines" id="eml_lines"></div>
+
+            <div class="divider"></div>
+            <div class="step-title"><span class="step-dot">6</span> 메시지 담당자</div>
+            <select id="mention_target" onchange="render()">
+                <option value="me">나 (me)</option>
+                <option value="leader">팀장님 (leader)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="preview-panel">
+        <h2><i class="fa-solid fa-eye"></i> 미리보기</h2>
+        <div class="muted" id="preview-context" style="margin-top:-10px;"></div>
+        <div class="slack-mockup">
+        <div class="bot-profile">
+            <div class="bot-avatar">🛡️</div>
+            <div class="bot-info">
+                <span class="bot-name">Security_Bot</span> <span style="font-size:10px; background:#eee; padding:2px 4px; border-radius:3px;">APP</span>
+                <div class="slack-body">
+                    <div id="prev-title" style="font-weight: bold;">[DLP 매체제어 알림]</div>
+                    <div class="msg-quote" id="preview-quote">
+                        &gt; *메일 제목:* [승인요청] 외장하드 사용...<br>
+                        &gt; *기안자:* 홍길동
+                    </div>
+                    <div id="preview-area"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="max-width:580px; width:100%;">
+        <div class="step-title"><span class="step-dot">JSON</span> 출력</div>
+        <pre id="json-output" style="max-width:100%;"></pre>
+    </div>
+    <button class="btn-download" onclick="downloadJSON()"><i class="fa-solid fa-download"></i> Download Rule JSON</button>
+</div>
+
+<script>
+    let currentMode = 'horizontal';
+    let emlPreviewNames = { drafter: "임직원명", approver: "임직원명" };
+
+    function setMode(mode) {
+        currentMode = mode;
+        document.getElementById('mode-hor').classList.toggle('active', mode === 'horizontal');
+        document.getElementById('mode-ver').classList.toggle('active', mode === 'vertical');
+        safeRender();
+    }
+
+    function addLinkField(text = "확인하기", val = "바로가기", type = "dynamic", style = "") {
+        const container = document.getElementById('links-container');
+        const div = document.createElement('div');
+        div.className = 'link-card';
+        div.innerHTML = `
+            <button class="remove-link" onclick="this.parentElement.remove(); render();">✕</button>
+            <input type="text" placeholder="버튼명" value="${text}" oninput="render()">
+            <select onchange="render()">
+                <option value="dynamic" ${type==='dynamic'?'selected':''}>Dynamic</option>
+                <option value="static" ${type==='static'?'selected':''}>Static</option>
+            </select>
+            <input type="text" placeholder="키워드 또는 URL" value="${val}" oninput="render()">
+        `;
+        if (style) div.setAttribute('data-style', style);
+        container.appendChild(div);
+        safeRender();
+    }
+
+    function setSelectValue(el, value) {
+        if (!el) return;
+        Array.from(el.options).forEach(opt => {
+            if (opt.value === value) el.value = value;
+        });
+    }
+
+    function applyTemplate(text, ctx) {
+        if (!text) return "";
+        let out = text;
+        Object.keys(ctx || {}).forEach(key => {
+            out = out.split(`{${key}}`).join(String(ctx[key]));
+        });
+        return out;
+    }
+
+    function getCompareDisplay(value, customValue) {
+        const trimmed = (customValue || "").trim();
+        if (value === "custom") return trimmed || "직접 입력";
+        const targetLabelMap = {
+            me: "나(me)",
+            leader: "팀장(leader)",
+            any: "임직원"
+        };
+        return targetLabelMap[value] || value;
+    }
+
+    function render() {
+        const ruleName = document.getElementById('rule_name').value;
+        const targetLabel = document.getElementById('target_label').value || "INBOX";
+        const filterKeyword = document.getElementById('filter_keyword').value || "";
+        const checkField = document.getElementById('check_field').value;
+        const compareWith = document.getElementById('compare_with').value;
+        const compareName = document.getElementById('compare_name').value.trim();
+        const useSecondCheck = document.getElementById('use_second_check').checked;
+        const secondCheckField = document.getElementById('second_check_field').value;
+        const secondCompareWith = document.getElementById('second_compare_with').value;
+        const secondCompareName = document.getElementById('second_compare_name').value.trim();
+        const mentionTarget = document.getElementById('mention_target').value;
+        const showSubject = document.getElementById('show_subject').checked;
+        const showApprover = document.getElementById('show_approver').checked;
+        const showDrafter = document.getElementById('show_drafter').checked;
+        const showMention = document.getElementById('show_mention').checked;
+        const headerText = document.getElementById('header_text').value || "*🛡️ {rule_name} 도착*";
+        const showHeader = document.getElementById('show_header').checked;
+        const labelSubject = document.getElementById('label_subject').value || "메일 제목";
+        const labelDrafter = document.getElementById('label_drafter').value || "기안자";
+        const labelApprover = document.getElementById('label_approver').value || "결재자";
+        const labelMention = document.getElementById('label_mention').value || "담당자 확인";
+        const mentionTemplate = document.getElementById('mention_template').value || "• *{label_mention}:* {mention}";
+        const extraLinesRaw = document.getElementById('extra_lines').value || "";
+        const extraLines = extraLinesRaw.split("\n").map(v => v.trim()).filter(Boolean);
+        const messageStyle = document.getElementById('message_style').value || "default";
+        const previewArea = document.getElementById('preview-area');
+        const ruleComment = document.getElementById('rule_comment').value;
+        const headerPreview = applyTemplate(headerText, { rule_name: ruleName });
+        document.getElementById('prev-title').innerText = showHeader ? (headerPreview || `[${ruleName}]`) : "";
+        const headerPreviewEl = document.getElementById('header_preview');
+        if (headerPreviewEl) headerPreviewEl.textContent = `표시 예시: ${headerPreview || "-"}`;
+        previewArea.innerHTML = '';
+
+        const compareWrap = document.getElementById('compare_with');
+        const compareNameWrap = document.getElementById('compare_name_wrap');
+        const compareNameInput = document.getElementById('compare_name');
+        const secondWrapA = document.getElementById('second_check_field');
+        const secondWrapB = document.getElementById('second_compare_with');
+        const secondCompareNameWrap = document.getElementById('second_compare_name_wrap');
+        const secondCompareNameInput = document.getElementById('second_compare_name');
+        const useSecondCheckBox = document.getElementById('use_second_check');
+
+        const isAlwaysPass = checkField === "always_pass";
+        compareWrap.disabled = isAlwaysPass;
+        compareNameInput.disabled = isAlwaysPass || compareWith !== "custom";
+        compareNameWrap.style.display = (!isAlwaysPass && compareWith === "custom") ? "block" : "none";
+        useSecondCheckBox.disabled = isAlwaysPass;
+        secondWrapA.disabled = isAlwaysPass || !useSecondCheck;
+        secondWrapB.disabled = isAlwaysPass || !useSecondCheck;
+        secondCompareNameInput.disabled = isAlwaysPass || !useSecondCheck || secondCompareWith !== "custom";
+        secondCompareNameWrap.style.display = (!isAlwaysPass && useSecondCheck && secondCompareWith === "custom") ? "block" : "none";
+
+        const ruleData = {
+            rule_name: ruleName,
+            comment: ruleComment,
+            target_label: targetLabel,
+            filter_keyword: filterKeyword,
+            layout_mode: currentMode,
+            logic: { check_field: checkField, mention_target: mentionTarget },
+            show_subject: showSubject,
+            show_drafter: showDrafter,
+            show_approver: showApprover,
+            show_mention: showMention,
+            show_header: showHeader,
+            labels: {
+                subject: labelSubject,
+                drafter: labelDrafter,
+                approver: labelApprover,
+                mention: labelMention
+            },
+            header_text: headerText,
+            mention_template: mentionTemplate,
+            extra_lines: extraLines,
+            message_style: messageStyle,
+            links: []
+        };
+
+        if (!isAlwaysPass) {
+            ruleData.logic.compare_with = compareWith;
+            if (compareWith === "custom") {
+                ruleData.logic.compare_name = compareName;
+            }
+            if (useSecondCheck) {
+                ruleData.logic.second_check_field = secondCheckField;
+                ruleData.logic.second_compare_with = secondCompareWith;
+                if (secondCompareWith === "custom") {
+                    ruleData.logic.second_compare_name = secondCompareName;
+                }
+            }
+        }
+
+        const buttons = [];
+        document.querySelectorAll('.link-card').forEach(card => {
+            const inputs = card.querySelectorAll('input');
+            const type = card.querySelector('select').value;
+            const btnText = inputs[0].value;
+            const isDanger = btnText.includes('반려');
+            
+            const linkObj = { text: btnText, type: type, style: isDanger ? "danger" : "primary" };
+            if(type === 'dynamic') linkObj.keyword = inputs[1].value;
+            else linkObj.url = inputs[1].value;
+            const forcedStyle = card.getAttribute('data-style');
+            if (forcedStyle) linkObj.style = forcedStyle;
+            ruleData.links.push(linkObj);
+
+            const btn = document.createElement('button');
+            btn.className = `s-btn ${isDanger ? 's-btn-danger' : (btnText.includes('승인') || btnText.includes('확인') ? 's-btn-primary' : '')}`;
+            btn.innerText = btnText;
+            buttons.push(btn);
+        });
+
+        // 미리보기 레이아웃 구성
+        const quote = [];
+        const sampleSubject = `[${filterKeyword || '알림'}] 샘플 제목`;
+        if (showSubject) quote.push(`<span class="md-strong">${labelSubject}:</span> ${sampleSubject}`);
+        if (showDrafter) quote.push(`<span class="md-strong">${labelDrafter}:</span> ${emlPreviewNames.drafter}`);
+        if (showApprover) quote.push(`<span class="md-strong">${labelApprover}:</span> ${emlPreviewNames.approver}`);
+
+        extraLines.forEach(line => {
+            const rendered = applyTemplate(line, {
+                subject: sampleSubject,
+                drafter: emlPreviewNames.drafter,
+                approver: emlPreviewNames.approver,
+                rule_name: ruleName,
+                label_subject: labelSubject,
+                label_drafter: labelDrafter,
+                label_approver: labelApprover,
+                label_mention: labelMention
+            });
+            if (rendered) quote.push(rendered.replace(/^>\s*/, ""));
+        });
+
+        const filteredQuote = quote.filter(Boolean);
+        if (messageStyle === "blockquote") {
+            document.getElementById('preview-quote').innerHTML = filteredQuote.map(l => `&gt; ${l}`).join("<br>");
+        } else {
+            document.getElementById('preview-quote').innerHTML = filteredQuote.join("<br>");
+        }
+
+        const mentionPreview = mentionTarget === 'me' ? '나' : '팀장님';
+        const mentionHtml = applyTemplate(mentionTemplate, {
+            mention: `<span style="color:#1264a3; background:#e8f5fa; border-radius:3px; padding:0 3px;">@${mentionPreview}</span>`,
+            mention_id: mentionPreview,
+            rule_name: ruleName,
+            label_subject: labelSubject,
+            label_drafter: labelDrafter,
+            label_approver: labelApprover,
+            label_mention: labelMention
+        });
+        const mentionLine = mentionHtml;
+        const mentionPlain = applyTemplate(mentionTemplate, {
+            mention: `@${mentionPreview}`,
+            mention_id: mentionPreview,
+            rule_name: ruleName,
+            label_subject: labelSubject,
+            label_drafter: labelDrafter,
+            label_approver: labelApprover,
+            label_mention: labelMention
+        });
+
+        if (messageStyle === "blockquote" && showMention) {
+            quote.push(mentionPlain.replace(/^>\s*/, ""));
+        }
+
+        const checkLabelMap = {
+            always_pass: "조건 없이 모든 메일에 대해",
+            drafter: "기안자가",
+            approver: "결재자가"
+        };
+        let contextText = "";
+        if (checkField === "always_pass") {
+            const who = getCompareDisplay(mentionTarget, "");
+            contextText = `조건 없이 ${who}에게 알림이 왔을 때 보여지는 메시지입니다.`;
+        } else {
+            const who = getCompareDisplay(compareWith, compareName);
+            contextText = `해당 메시지는 ${checkLabelMap[checkField]} ${who}일 때 표시됩니다.`;
+            if (useSecondCheck) {
+                const who2 = getCompareDisplay(secondCompareWith, secondCompareName);
+                contextText += ` 추가로 ${checkLabelMap[secondCheckField]} ${who2}일 때만 표시됩니다.`;
+            }
+        }
+        document.getElementById('preview-context').textContent = contextText;
+
+        // 규칙이 결재자/기안자를 지정하는 경우, EML이 없을 때 미리보기 이름에 반영
+        if (checkField === "approver") {
+            emlPreviewNames.approver = getCompareDisplay(compareWith, compareName) || emlPreviewNames.approver;
+        }
+        if (checkField === "drafter") {
+            emlPreviewNames.drafter = getCompareDisplay(compareWith, compareName) || emlPreviewNames.drafter;
+        }
+        if (useSecondCheck) {
+            if (secondCheckField === "approver") {
+                emlPreviewNames.approver = getCompareDisplay(secondCompareWith, secondCompareName) || emlPreviewNames.approver;
+            }
+            if (secondCheckField === "drafter") {
+                emlPreviewNames.drafter = getCompareDisplay(secondCompareWith, secondCompareName) || emlPreviewNames.drafter;
+            }
+        }
+        
+        if (currentMode === 'vertical') {
+            // 세로 모드: 멘션 옆에 버튼 하나씩 배치하거나 아래로 나열
+            buttons.forEach((btn, idx) => {
+                const row = document.createElement('div');
+                row.className = 'vertical-row';
+                const showRowMention = showMention && messageStyle !== "blockquote";
+                row.innerHTML = idx === 0 && showRowMention ? `<span>${mentionLine}</span>` : `<span></span>`;
+                row.appendChild(btn);
+                previewArea.appendChild(row);
+            });
+        } else {
+            // 가로 모드: 멘션은 따로, 버튼은 아래 그룹으로
+            if (showMention && messageStyle !== "blockquote") {
+                const textRow = document.createElement('div');
+                textRow.innerHTML = mentionLine;
+                previewArea.appendChild(textRow);
+            }
+            
+            const btnGroup = document.createElement('div');
+            btnGroup.className = 'action-group';
+            buttons.forEach(btn => btnGroup.appendChild(btn));
+            previewArea.appendChild(btnGroup);
+        }
+
+        document.getElementById('json-output').innerText = JSON.stringify(ruleData, null, 2);
+        return ruleData;
+    }
+
+    function downloadJSON() {
+        const data = render();
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        const safeName = (data.rule_name || "rule")
+            .replace(/[\\/:*?"<>|]/g, "_")
+            .trim();
+        a.download = `${safeName || "rule"}.json`;
+        a.click();
+    }
+
+    function safeRender() {
+        try {
+            render();
+        } catch (err) {
+            const meta = document.getElementById('import_meta');
+            if (meta) meta.textContent = `렌더 실패: ${err}`;
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        // 초기 버튼 설정
+        addLinkField("✅ 승인하기", "승인하기", "dynamic", "primary");
+        addLinkField("❌ 반려하기", "반려하기", "dynamic", "danger");
+        safeRender();
+
+        // 파일 불러오기 (JSON/EML)
+        const importInput = document.getElementById('import_file');
+        const importMeta = document.getElementById('import_meta');
+        const jsonMeta = document.getElementById('json_meta');
+        const emlMeta = document.getElementById('eml_meta');
+        if (!importInput) return;
+
+        importInput.addEventListener('change', async (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const name = file.name.toLowerCase();
+            if (name.endsWith(".json")) {
+                await handleJsonFile(file);
+            } else if (name.endsWith(".eml")) {
+                await handleEmlFile(file);
+            } else if (importMeta) {
+                importMeta.textContent = "지원하지 않는 파일 형식입니다.";
+            }
+        });
+
+        // 핸들러에서 메타 노드 접근 가능하도록 노출
+        window.__import_meta = { importMeta, jsonMeta, emlMeta };
+    });
+
+    async function handleJsonFile(file) {
+        try {
+            const meta = window.__import_meta || {};
+            const importMeta = meta.importMeta || document.getElementById('import_meta');
+            const jsonMeta = meta.jsonMeta || document.getElementById('json_meta');
+            if (importMeta) importMeta.textContent = `읽는 중: ${file.name}`;
+            if (jsonMeta) jsonMeta.textContent = "";
+            const text = await file.text();
+            const data = JSON.parse(text);
+            applyJsonToUi(data);
+            if (jsonMeta) jsonMeta.textContent = "JSON 불러오기 완료";
+        } catch (err) {
+            const jsonMeta = (window.__import_meta || {}).jsonMeta || document.getElementById('json_meta');
+            if (jsonMeta) jsonMeta.textContent = `JSON 읽기 실패: ${err}`;
+        }
+    }
+
+    async function handleEmlFile(file) {
+        if (!file) return;
+        if (!file.name.toLowerCase().endsWith('.eml')) {
+            alert('EML 파일만 업로드 가능합니다.');
+            return;
+        }
+        try {
+            const meta = window.__import_meta || {};
+            const importMeta = meta.importMeta || document.getElementById('import_meta');
+            const emlMeta = meta.emlMeta || document.getElementById('eml_meta');
+            if (importMeta) importMeta.textContent = `읽는 중: ${file.name}`;
+            if (emlMeta) emlMeta.textContent = "";
+            const buf = await file.arrayBuffer();
+            let text = decodeArrayBuffer(buf);
+            const parsed = parseEml(text);
+            applyEmlToUi(parsed);
+            if (emlMeta) emlMeta.textContent = `제목: ${parsed.subject || "제목 없음"}`;
+        } catch (err) {
+            const emlMeta = (window.__import_meta || {}).emlMeta || document.getElementById('eml_meta');
+            if (emlMeta) emlMeta.textContent = `EML 읽기 실패: ${err}`;
+        }
+    }
+
+    function applyJsonToUi(rule) {
+        if (!rule || typeof rule !== 'object') return;
+        if (rule.comment !== undefined) document.getElementById('rule_comment').value = rule.comment || "";
+        if (rule.rule_name !== undefined) document.getElementById('rule_name').value = rule.rule_name || "";
+        if (rule.target_label !== undefined) document.getElementById('target_label').value = rule.target_label || "";
+        if (rule.filter_keyword !== undefined) document.getElementById('filter_keyword').value = rule.filter_keyword || "";
+        if (rule.layout_mode) setMode(rule.layout_mode);
+        if (rule.logic) {
+            document.getElementById('check_field').value = rule.logic.check_field || "always_pass";
+            document.getElementById('compare_with').value = rule.logic.compare_with || "me";
+            document.getElementById('compare_name').value = rule.logic.compare_name || "";
+            const hasSecond = !!rule.logic.second_check_field;
+            document.getElementById('use_second_check').checked = hasSecond;
+            document.getElementById('second_check_field').value = rule.logic.second_check_field || "drafter";
+            document.getElementById('second_compare_with').value = rule.logic.second_compare_with || "me";
+            document.getElementById('second_compare_name').value = rule.logic.second_compare_name || "";
+            document.getElementById('mention_target').value = rule.logic.mention_target || "me";
+        }
+        document.getElementById('show_subject').checked = rule.show_subject !== undefined ? !!rule.show_subject : true;
+        document.getElementById('show_drafter').checked = rule.show_drafter !== undefined ? !!rule.show_drafter : true;
+        document.getElementById('show_approver').checked = !!rule.show_approver;
+        document.getElementById('show_mention').checked = rule.show_mention !== undefined ? !!rule.show_mention : true;
+        document.getElementById('show_header').checked = rule.show_header !== undefined ? !!rule.show_header : true;
+
+        const labels = rule.labels || {};
+        document.getElementById('label_subject').value = labels.subject || "메일 제목";
+        document.getElementById('label_drafter').value = labels.drafter || "기안자";
+        document.getElementById('label_approver').value = labels.approver || "결재자";
+        document.getElementById('label_mention').value = labels.mention || "담당자 확인";
+        document.getElementById('header_text').value = rule.header_text || "*🛡️ {rule_name} 도착*";
+        document.getElementById('mention_template').value = rule.mention_template || "• *{label_mention}:* {mention}";
+        const style = rule.message_style === "system_log" ? "blockquote" : (rule.message_style || "default");
+        document.getElementById('message_style').value = style;
+        if (Array.isArray(rule.extra_lines)) {
+            document.getElementById('extra_lines').value = rule.extra_lines.join("\n");
+        } else if (typeof rule.extra_lines === "string") {
+            document.getElementById('extra_lines').value = rule.extra_lines;
+        } else {
+            document.getElementById('extra_lines').value = "";
+        }
+
+        const container = document.getElementById('links-container');
+        container.innerHTML = "";
+        (rule.links || []).forEach(link => {
+            const type = link.type || (link.url ? "static" : "dynamic");
+            const val = type === "static" ? (link.url || "") : (link.keyword || "");
+            addLinkField(link.text || "확인하기", val, type, link.style || "");
+        });
+
+        if (rule.show_approver) {
+            emlPreviewNames.approver = emlPreviewNames.approver || "미상";
+        }
+        safeRender();
+    }
+
+    function resetForm() {
+        document.getElementById('rule_comment').value = "";
+        document.getElementById('rule_name').value = "";
+        document.getElementById('target_label').value = "";
+        document.getElementById('filter_keyword').value = "";
+        document.getElementById('check_field').value = "always_pass";
+        document.getElementById('compare_with').value = "me";
+        document.getElementById('compare_name').value = "";
+        document.getElementById('use_second_check').checked = false;
+        document.getElementById('second_check_field').value = "drafter";
+        document.getElementById('second_compare_with').value = "me";
+        document.getElementById('second_compare_name').value = "";
+        document.getElementById('mention_target').value = "me";
+        document.getElementById('show_subject').checked = true;
+        document.getElementById('show_drafter').checked = true;
+        document.getElementById('show_approver').checked = false;
+        document.getElementById('show_mention').checked = true;
+        document.getElementById('show_header').checked = true;
+        document.getElementById('label_subject').value = "메일 제목";
+        document.getElementById('label_drafter').value = "기안자";
+        document.getElementById('label_approver').value = "결재자";
+        document.getElementById('label_mention').value = "담당자 확인";
+        document.getElementById('header_text').value = "*🛡️ {rule_name} 도착*";
+        document.getElementById('mention_template').value = "• *{label_mention}:* {mention}";
+        document.getElementById('message_style').value = "default";
+        document.getElementById('extra_lines').value = "";
+
+        emlPreviewNames = { drafter: "임직원명", approver: "임직원명" };
+
+        const container = document.getElementById('links-container');
+        container.innerHTML = "";
+        addLinkField("✅ 승인하기", "승인하기", "dynamic", "primary");
+        addLinkField("❌ 반려하기", "반려하기", "dynamic", "danger");
+
+        document.getElementById('import_meta').textContent = "JSON 또는 EML 파일을 업로드하세요.";
+        document.getElementById('json_meta').textContent = "";
+        document.getElementById('eml_meta').textContent = "";
+        document.getElementById('eml_links').innerHTML = "";
+        document.getElementById('eml_lines').innerHTML = "";
+        const info = document.getElementById('eml_info');
+        if (info) {
+            info.innerHTML = `
+                <div class="eml-info-row"><div>제목</div><div>-</div></div>
+                <div class="eml-info-row"><div>보낸사람</div><div>-</div></div>
+                <div class="eml-info-row"><div>받는사람</div><div>-</div></div>
+            `;
+        }
+        document.getElementById('eml_iframe').srcdoc = "";
+
+        render();
+    }
+
+    function parseEml(raw) {
+        const headerEnd = raw.search(/\r?\n\r?\n/);
+        const headerText = headerEnd >= 0 ? raw.slice(0, headerEnd) : raw;
+        const bodyText = headerEnd >= 0 ? raw.slice(headerEnd).replace(/^\r?\n/, "") : "";
+        const normalizedRaw = raw.replace(/\r\n/g, "\n");
+
+        const headers = {};
+        const unfolded = headerText.replace(/\r?\n[ \t]+/g, " ");
+        unfolded.split(/\r?\n/).forEach(line => {
+            const idx = line.indexOf(':');
+            if (idx > 0) {
+                const key = line.slice(0, idx).trim().toLowerCase();
+                const val = line.slice(idx + 1).trim();
+                headers[key] = val;
+            }
+        });
+
+        const subject = decodeMimeWord(headers['subject'] || "");
+        const from = decodeMimeWord(headers['from'] || "");
+        const to = decodeMimeWord(headers['to'] || "");
+        const contentType = headers['content-type'] || "";
+        const boundaryMatch = contentType.match(/boundary="?([^";]+)"?/i);
+        const defaultCharset = extractCharset(contentType) || "utf-8";
+        let html = "";
+        let textPart = "";
+
+        if (boundaryMatch) {
+            const boundary = boundaryMatch[1];
+            const parts = bodyText.split(new RegExp(`--${escapeReg(boundary)}`));
+            parts.forEach(part => {
+                const p = part.trim();
+                if (!p || p === "--") return;
+                const pHeaderEnd = p.search(/\r?\n\r?\n/);
+                if (pHeaderEnd < 0) return;
+                const pHeader = p.slice(0, pHeaderEnd);
+                const pBody = p.slice(pHeaderEnd).replace(/^\r?\n/, "");
+                const pHeaders = {};
+                const pUnfolded = pHeader.replace(/\r?\n[ \t]+/g, " ");
+                pUnfolded.split(/\r?\n/).forEach(line => {
+                    const idx = line.indexOf(':');
+                    if (idx > 0) {
+                        pHeaders[line.slice(0, idx).trim().toLowerCase()] = line.slice(idx + 1).trim();
+                    }
+                });
+                const ctypeRaw = (pHeaders['content-type'] || "");
+                const ctype = ctypeRaw.toLowerCase();
+                const cenc = (pHeaders['content-transfer-encoding'] || "").toLowerCase();
+                const charset = extractCharset(ctypeRaw) || defaultCharset;
+                const decoded = decodeBody(pBody, cenc, charset);
+                if (ctype.includes('text/html')) html = decoded;
+                else if (ctype.includes('text/plain')) textPart = decoded;
+            });
+        } else {
+            html = decodeBody(bodyText, "", defaultCharset);
+        }
+
+        if (!html && !textPart) {
+            html = extractPartByIndex(normalizedRaw, "text/html", defaultCharset)
+                || extractPartByRegex(normalizedRaw, "text/html", defaultCharset) || "";
+            textPart = extractPartByIndex(normalizedRaw, "text/plain", defaultCharset)
+                || extractPartByRegex(normalizedRaw, "text/plain", defaultCharset) || "";
+        }
+
+        return { subject, from, to, html, text: textPart, raw };
+    }
+
+    function decodeArrayBuffer(buf) {
+        const bytes = new Uint8Array(buf);
+        // 휴리스틱: NUL 비율이 높으면 UTF-16LE로 판단
+        let nul = 0;
+        for (let i = 0; i < bytes.length; i++) if (bytes[i] === 0) nul++;
+        const nulRatio = bytes.length ? nul / bytes.length : 0;
+        if (nulRatio > 0.05) {
+            return new TextDecoder("utf-16le").decode(bytes);
+        }
+        return new TextDecoder("utf-8").decode(bytes);
+    }
+
+    function decodeMimeWord(str) {
+        // 기본 형태(=?utf-8?B?...?=) 지원
+        return str.replace(/=\?([^?]+)\?([bqBQ])\?([^?]+)\?=/g, (_, charset, enc, txt) => {
+            try {
+                const cs = (charset || "utf-8").toLowerCase();
+                if (enc.toUpperCase() === 'B') {
+                    const bytes = base64ToBytes(txt);
+                    return decodeBytes(bytes, cs);
+                }
+                // Q 인코딩: 언더스코어는 공백, =XX는 헥사
+                const q = txt.replace(/_/g, ' ');
+                const bytes = qpToBytes(q);
+                return decodeBytes(bytes, cs);
+            } catch {
+                return txt;
+            }
+        });
+    }
+
+    function decodeBody(body, encoding, charset) {
+        const cs = (charset || "utf-8").toLowerCase();
+        const enc = (encoding || "").toLowerCase();
+        if (enc.includes("base64")) {
+            const bytes = base64ToBytes(body.replace(/\s+/g, ''));
+            return decodeBytes(bytes, cs);
+        }
+        if (enc.includes("quoted-printable")) {
+            const cleaned = body.replace(/=\r?\n/g, "");
+            const bytes = qpToBytes(cleaned);
+            return decodeBytes(bytes, cs);
+        }
+        // 7비트/8비트/바이너리: 헤더 없이 base64가 들어오는 경우 대비
+        const maybe = tryDecodeBase64(body, cs);
+        if (maybe) return maybe;
+        try {
+            return decodeBytes(strToBytes(body), cs);
+        } catch {
+            return body;
+        }
+    }
+
+    function base64ToBytes(b64) {
+        const bin = atob(b64);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return bytes;
+    }
+
+    function isLikelyBase64(text) {
+        const cleaned = (text || "").replace(/\s+/g, "");
+        if (cleaned.length < 16) return false;
+        if (cleaned.length % 4 !== 0) return false;
+        if (/[^A-Za-z0-9+/=]/.test(cleaned)) return false;
+        return true;
+    }
+
+    function tryDecodeBase64(text, charset) {
+        if (!isLikelyBase64(text)) return "";
+        try {
+            const bytes = base64ToBytes(text.replace(/\s+/g, ""));
+            const decoded = decodeBytes(bytes, charset || "utf-8");
+            if (decoded && /[A-Za-z가-힣]/.test(decoded)) return decoded;
+        } catch {
+            return "";
+        }
+        return "";
+    }
+
+    function qpToBytes(str) {
+        const bytes = [];
+        for (let i = 0; i < str.length; i++) {
+            const ch = str[i];
+            if (ch === '=' && i + 2 < str.length) {
+                const hex = str.slice(i + 1, i + 3);
+                if (/^[0-9A-Fa-f]{2}$/.test(hex)) {
+                    bytes.push(parseInt(hex, 16));
+                    i += 2;
+                    continue;
+                }
+            }
+            bytes.push(ch.charCodeAt(0));
+        }
+        return new Uint8Array(bytes);
+    }
+
+    function qpDecode(str) {
+        return decodeBytes(qpToBytes(str.replace(/=\\r?\\n/g, "")), "utf-8");
+    }
+
+    function deqpLite(str) {
+        return str.replace(/=\\r?\\n/g, "").replace(/=3D/gi, "=");
+    }
+
+    function strToBytes(str) {
+        const bytes = new Uint8Array(str.length);
+        for (let i = 0; i < str.length; i++) bytes[i] = str.charCodeAt(i);
+        return bytes;
+    }
+
+    function decodeBytes(bytes, charset) {
+        try {
+            return new TextDecoder(charset).decode(bytes);
+        } catch {
+            return new TextDecoder("utf-8").decode(bytes);
+        }
+    }
+
+    function extractCharset(contentType) {
+        const m = contentType.match(/charset\\s*=\\s*\"?([^\";]+)\"?/i);
+        return m ? m[1].trim() : "";
+    }
+
+    function findPart(raw, mime, fallbackCharset) {
+        const re = new RegExp(`Content-Type:\\\\s*${mime.replace('/', '\\\\/')}[^\\n]*`, "i");
+        const m = re.exec(raw);
+        if (!m) return null;
+        const headerStart = m.index;
+        const headerEnd = raw.indexOf("\\n\\n", headerStart);
+        if (headerEnd < 0) return null;
+        const headerBlock = raw.slice(headerStart, headerEnd).replace(/\\n[ \\t]+/g, " ");
+        const headers = {};
+        headerBlock.split(/\\r?\\n/).forEach(line => {
+            const idx = line.indexOf(':');
+            if (idx > 0) headers[line.slice(0, idx).trim().toLowerCase()] = line.slice(idx + 1).trim();
+        });
+        const encoding = (headers['content-transfer-encoding'] || "").toLowerCase();
+        const charset = extractCharset(headers['content-type'] || "") || fallbackCharset || "utf-8";
+        const bodyStart = headerEnd + 2;
+        const rest = raw.slice(bodyStart);
+        const boundaryIdx = rest.search(/\\n--/);
+        const body = boundaryIdx >= 0 ? rest.slice(0, boundaryIdx) : rest;
+        return { body, encoding, charset };
+    }
+
+    function extractPartByRegex(raw, mime, fallbackCharset) {
+        const re = new RegExp(`Content-Type:\\\\s*${mime.replace('/', '\\\\/')}[^\\n]*\\nContent-Transfer-Encoding:\\\\s*([^\\n]+)\\n\\n`, "i");
+        const m = re.exec(raw);
+        if (!m) return "";
+        const encoding = (m[1] || "").trim().toLowerCase();
+        const headerEnd = m.index + m[0].length;
+        const rest = raw.slice(headerEnd);
+        const boundaryIdx = rest.search(/\\n--/);
+        const body = boundaryIdx >= 0 ? rest.slice(0, boundaryIdx) : rest;
+        return decodeBody(body, encoding, fallbackCharset || "utf-8");
+    }
+
+    function extractPartByIndex(raw, mime, fallbackCharset) {
+        const lower = raw.toLowerCase();
+        const key = `content-type: ${mime}`;
+        const idx = lower.indexOf(key);
+        if (idx < 0) return "";
+        const headerEnd = raw.indexOf("\n\n", idx);
+        if (headerEnd < 0) return "";
+        const headerBlock = raw.slice(idx, headerEnd).replace(/\n[ \t]+/g, " ");
+        const headers = {};
+        headerBlock.split(/\n/).forEach(line => {
+            const i = line.indexOf(':');
+            if (i > 0) headers[line.slice(0, i).trim().toLowerCase()] = line.slice(i + 1).trim();
+        });
+        const encoding = (headers['content-transfer-encoding'] || "").toLowerCase();
+        const charset = extractCharset(headers['content-type'] || "") || fallbackCharset || "utf-8";
+        const bodyStart = headerEnd + 2;
+        const rest = raw.slice(bodyStart);
+        const boundaryIdx = rest.search(/\n--/);
+        const body = boundaryIdx >= 0 ? rest.slice(0, boundaryIdx) : rest;
+        return decodeBody(body, encoding, charset);
+    }
+
+    function escapeReg(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function applyEmlToUi(parsed) {
+        const meta = document.getElementById('eml_meta');
+        meta.textContent = parsed.subject ? `제목: ${parsed.subject}` : "제목 없음";
+        const info = document.getElementById('eml_info');
+        if (info) {
+            const subject = parsed.subject || "-";
+            const from = parsed.from || "-";
+            const to = parsed.to || "-";
+            info.innerHTML = `
+                <div class="eml-info-row"><div>제목</div><div>${escapeHtml(subject)}</div></div>
+                <div class="eml-info-row"><div>보낸사람</div><div>${escapeHtml(from)}</div></div>
+                <div class="eml-info-row"><div>받는사람</div><div>${escapeHtml(to)}</div></div>
+            `;
+        }
+
+        if (parsed.subject) {
+            document.getElementById('rule_name').value = parsed.subject.replace(/^\[(.*?)\]\s*/, "$1 ");
+            const m = parsed.subject.match(/^\[(.*?)\]/);
+            if (m && m[1]) document.getElementById('filter_keyword').value = m[1];
+        }
+
+        let html = parsed.html || "";
+        if (html.includes("=3D")) html = deqpLite(html);
+        let rawText = parsed.text || stripHtml(html);
+        const decodedText = tryDecodeBase64(rawText, "utf-8");
+        if (decodedText) rawText = decodedText;
+        rawText = rawText.replace(/\\r/g, "\n").replace(/\\\\n/g, "\n").replace(/\\n/g, "\n");
+        const text = (rawText || "").replace(/\s+/g, " ").trim();
+
+        const drafter = extractName(text, /기안자\s*[:：]?\s*([^\s\n\r]+)/);
+        const approver = extractName(text, /결재자\s*[:：]?\s*([^\s\n\r]+)/);
+        const requestor = extractName(text, /요청자\s*\(.*?\)\s*([^\s\n\r]+)/) || extractName(text, /([^\s]+)님이\s.*?요청/);
+        emlPreviewNames.drafter = drafter || requestor || emlPreviewNames.drafter;
+        emlPreviewNames.approver = approver || emlPreviewNames.approver;
+
+        const iframe = document.getElementById('eml_iframe');
+        if (html) {
+            iframe.srcdoc = html;
+        } else if (rawText) {
+            const safe = escapeHtml(rawText);
+            iframe.srcdoc = `<pre style="white-space:pre-wrap; font-family:Arial; padding:10px;">${safe}</pre>`;
+        } else {
+            iframe.srcdoc = "<div style='padding:10px;font-family:Arial;'>No body</div>";
+        }
+
+        let links = extractLinks(html);
+        if (!links.length && parsed.raw) {
+            const decodedRaw = deqpLite(parsed.raw);
+            links = extractLinksFromString(decodedRaw);
+        }
+        if (!links.length && rawText) {
+            links = extractLinksFromString(rawText);
+        }
+        const list = document.getElementById('eml_links');
+        list.innerHTML = "";
+        if (!links.length) {
+            const div = document.createElement('div');
+            div.className = 'muted mini';
+            div.textContent = '링크를 찾지 못했습니다.';
+            list.appendChild(div);
+        } else {
+            links.forEach(link => {
+                const row = document.createElement('div');
+                row.className = 'eml-link';
+                const label = document.createElement('div');
+                label.className = 'mini';
+                label.textContent = link.text || '링크';
+                label.title = link.href || '';
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = '버튼명 (예: 승인하기)';
+                input.value = link.text || '';
+                const mode = document.createElement('select');
+                mode.className = 'col-type';
+                const optDyn = document.createElement('option');
+                optDyn.value = 'dynamic';
+                optDyn.textContent = 'Dynamic';
+                const optSta = document.createElement('option');
+                optSta.value = 'static';
+                optSta.textContent = 'Static';
+                mode.appendChild(optDyn);
+                mode.appendChild(optSta);
+                const btn = document.createElement('button');
+                btn.className = 'col-btn';
+                btn.textContent = '버튼 추가';
+                btn.onclick = () => {
+                    const text = (input.value || link.text || "확인하기").trim();
+                    const type = mode.value;
+                    const val = type === "static" ? link.href : (link.text || "바로가기");
+                    addLinkField(text, val, type, text.includes('반려') ? "danger" : "");
+                };
+                row.appendChild(label);
+                row.appendChild(input);
+                row.appendChild(mode);
+                row.appendChild(btn);
+                list.appendChild(row);
+            });
+        }
+
+        const lines = extractSummaryLines(rawText || "");
+        const lineWrap = document.getElementById('eml_lines');
+        lineWrap.innerHTML = "";
+        if (!lines.length) {
+            const div = document.createElement('div');
+            div.className = 'muted mini';
+            div.textContent = '본문 문구를 찾지 못했습니다.';
+            lineWrap.appendChild(div);
+        } else {
+            lines.forEach(line => {
+                const row = document.createElement('div');
+                row.className = 'eml-line';
+                const label = document.createElement('div');
+                label.className = 'mini';
+                label.textContent = line;
+                const btn = document.createElement('button');
+                btn.textContent = '추가';
+                btn.onclick = () => appendExtraLine(line);
+                row.appendChild(label);
+                row.appendChild(btn);
+                lineWrap.appendChild(row);
+            });
+        }
+
+        const extraEl = document.getElementById('extra_lines');
+        if (!extraEl.value.trim() && lines.length) {
+            extraEl.value = lines.join("\n").replace(/\\\\n/g, "\n").replace(/\\n/g, "\n");
+        }
+
+        render();
+    }
+
+    function extractLinks(html) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html || "";
+        const links = [];
+        tmp.querySelectorAll('a[href]').forEach(a => {
+            const text = a.textContent.trim();
+            let href = a.getAttribute('href');
+            if (href && href.includes("=3D")) href = deqpLite(href);
+            if (href) links.push({ text, href });
+        });
+        return links;
+    }
+
+    function extractLinksFromString(text) {
+        const links = [];
+        const hrefRe = new RegExp("href\\\\s*=\\\\s*['\\\"]([^'\\\"]+)['\\\"]", "gi");
+        let m;
+        while ((m = hrefRe.exec(text)) !== null) {
+            links.push({ text: "바로가기", href: m[1] });
+        }
+        const urlRe = new RegExp("(https?:\\\\/\\\\/[^\\s\"'<>]+)", "gi");
+        while ((m = urlRe.exec(text)) !== null) {
+            links.push({ text: "바로가기", href: m[1] });
+        }
+        return links;
+    }
+
+    function extractSummaryLines(text) {
+        if (!text) return [];
+        const normalized = text.replace(/\\\\n/g, "\n").replace(/\\n/g, "\n");
+        const rawLines = normalized.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        const out = [];
+        const seen = new Set();
+        rawLines.forEach(line => {
+            if (/^https?:\/\//i.test(line)) return;
+            if (/^(확인|자세히|링크|바로가기)/.test(line)) return;
+            if (line.length < 2) return;
+            if (seen.has(line)) return;
+            seen.add(line);
+            out.push(line);
+        });
+        return out.slice(0, 12);
+    }
+
+    function appendExtraLine(line) {
+        const el = document.getElementById('extra_lines');
+        const cleaned = (line || "").replace(/\\\\n/g, "\n").replace(/\\n/g, "\n").trim();
+        const curr = el.value.trim();
+        el.value = curr ? `${curr}\n${cleaned}` : cleaned;
+        render();
+    }
+
+    function stripHtml(html) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html || "";
+        return tmp.textContent || "";
+    }
+
+    function escapeHtml(str) {
+        return (str || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/\"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
+
+    function extractName(text, regex) {
+        const m = text.match(regex);
+        if (m && m[1]) {
+            return m[1].replace(/\s+/g, "").replace(/\(.*?\)/, "");
+        }
+        return "";
+    }
+</script>
+</body>
+</html>

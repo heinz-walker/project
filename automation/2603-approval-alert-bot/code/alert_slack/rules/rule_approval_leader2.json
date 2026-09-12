@@ -1,0 +1,37 @@
+{
+  "rule_name": "정보보안팀 결재 도착 알림(리더결재)",
+  "comment": "정보보안팀 내부 품의관련 알림",
+  "target_label": "#Archive/Approval_Alert",
+  "filter_keyword": "결재도착",
+  "layout_mode": "vertical",
+  "logic": {
+    "check_field": "drafter",
+    "mention_target": "leader",
+    "compare_with": "me",
+    "exclude_field": "approver",
+    "exclude_compare_with": "me"
+  },
+  "show_subject": true,
+  "show_drafter": true,
+  "show_approver": false,
+  "show_mention": true,
+  "show_header": true,
+  "labels": {
+    "subject": "메일 제목",
+    "drafter": "기안자",
+    "approver": "결재자",
+    "mention": "담당자 "
+  },
+  "header_text": "*[정보보안팀 결재 도착 알림(리더결재)]*",
+  "mention_template": "• *{label_mention}:* {mention}",
+  "extra_lines": [],
+  "message_style": "default",
+  "links": [
+    {
+      "text": "📄 결재 문서 확인",
+      "type": "dynamic",
+      "style": "primary",
+      "keyword": "바로가기"
+    }
+  ]
+}

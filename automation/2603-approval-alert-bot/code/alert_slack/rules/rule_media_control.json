@@ -1,0 +1,27 @@
+{
+  "rule_name": "매체제어 승인요청 알림",
+  "target_label": "#Alert/EndpointSecurity/media_control",
+  "filter_keyword": "승인요청",
+  "logic": {
+    "check_field": "always_pass",
+    "mention_target": "me"
+  },
+  "show_subject": true,
+  "show_drafter": true,
+  "show_approver": false,
+  "show_mention": true,
+  "labels": {
+    "subject": "메일 제목",
+    "drafter": "기안자",
+    "approver": "결재자",
+    "mention": "담당자 확인"
+  },
+  "header_text": "*[매체제어 승인요청 알림]*",
+  "mention_template": "• *{label_mention}:* {mention}",
+  "extra_lines": [],
+  "links": [
+    { "text": "🖥️ 관리콘솔", "url": "https://console.example.com/receive-approval/total", "type": "static" },
+    { "text": "✅ 승인하기", "keyword": "승인 하기", "type": "dynamic", "style": "primary" },
+    { "text": "❌ 반려하기", "keyword": "반려 하기", "type": "dynamic", "style": "danger" }
+  ]
+}

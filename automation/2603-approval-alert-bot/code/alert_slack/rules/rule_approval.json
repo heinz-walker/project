@@ -1,0 +1,35 @@
+{
+  "rule_name": "외부 결재 도착 알림",
+  "comment": "임직원이 결재 상신 시 발생하는 알럿",
+  "target_label": "#Archive/Approval_Alert",
+  "filter_keyword": "결재도착",
+  "layout_mode": "horizontal",
+  "logic": {
+    "check_field": "drafter",
+    "mention_target": "me",
+    "compare_with": "any"
+  },
+  "show_subject": true,
+  "show_drafter": true,
+  "show_approver": false,
+  "show_mention": true,
+  "show_header": true,
+  "labels": {
+    "subject": "메일 제목",
+    "drafter": "기안자",
+    "approver": "결재자",
+    "mention": "담당자 확인"
+  },
+  "header_text": "*[결재 도착 알림]*",
+  "mention_template": "• *{label_mention}:* {mention}",
+  "extra_lines": [],
+  "message_style": "default",
+  "links": [
+    {
+      "text": "📄 결재 문서 열기",
+      "type": "dynamic",
+      "style": "primary",
+      "keyword": "바로가기"
+    }
+  ]
+}

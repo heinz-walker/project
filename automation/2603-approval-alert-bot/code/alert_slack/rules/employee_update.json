@@ -1,0 +1,36 @@
+{
+  "rule_name": "알림 임직원 명부 갱신 (1명 추가 / 0명  퇴사)",
+  "comment": "인사 담당이 관리하는 '사번 안내' 시트에 목록이 추가되면, 운영문서 시트에 반영이되고 반영이되면 메일을 받아서, 메일을 통해 슬랙으로 알림이 뜨게하는 규칙",
+  "target_label": "#Alert/employee_data",
+  "filter_keyword": "[알림]",
+  "layout_mode": "vertical",
+  "logic": {
+    "check_field": "always_pass",
+    "mention_target": "me"
+  },
+  "show_subject": false,
+  "show_drafter": false,
+  "show_approver": false,
+  "show_mention": false,
+  "show_header": false,
+  "labels": {
+    "subject": "메일 제목",
+    "drafter": "기안자",
+    "approver": "결재자",
+    "mention": "담당자 확인"
+  },
+  "header_text": "*🛡️ {rule_name} 도착*",
+  "mention_template": "• *{label_mention}:* {mention}",
+  "extra_lines": [
+    "임직원 명부가 갱신되었습니다."
+  ],
+  "message_style": "default",
+  "links": [
+    {
+      "text": "시트 확인",
+      "type": "static",
+      "style": "primary",
+      "url": "https://docs.google.com/spreadsheets/d/<YOUR_SPREADSHEET_ID>"
+    }
+  ]
+}

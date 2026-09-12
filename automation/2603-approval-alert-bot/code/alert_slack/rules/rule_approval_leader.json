@@ -1,0 +1,38 @@
+{
+  "rule_name": "정보보안팀 비용 품의/결의 결재 도착 알림(리더결재)",
+  "comment": "정보보안팀이 비용품의/결의 상신 후 재무 담당 결재 완료 시 알람",
+  "target_label": "#Archive/Approval_Alert",
+  "filter_keyword": "결재진행",
+  "layout_mode": "vertical",
+  "logic": {
+    "check_field": "drafter",
+    "mention_target": "leader",
+    "compare_with": "me",
+    "second_check_field": "approver",
+    "second_compare_with": "custom",
+    "second_compare_name": "성춘향,이몽룡"
+  },
+  "show_subject": true,
+  "show_drafter": true,
+  "show_approver": true,
+  "show_mention": true,
+  "show_header": true,
+  "labels": {
+    "subject": "메일 제목",
+    "drafter": "기안자",
+    "approver": "결재자",
+    "mention": "담당자 "
+  },
+  "header_text": "비용 품의/결의 결재 도착 알림(리더결재)",
+  "mention_template": "• *{label_mention}:* {mention}",
+  "extra_lines": [],
+  "message_style": "default",
+  "links": [
+    {
+      "text": "📄 결재 문서 확인",
+      "type": "dynamic",
+      "style": "primary",
+      "keyword": "바로가기"
+    }
+  ]
+}

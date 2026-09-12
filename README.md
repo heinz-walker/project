@@ -21,8 +21,9 @@ Dev 환경 진단·재구축으로 표준 정립 → Stage/Live 적용 → Live 
 ### [security-policy/2606-network-separation-relaxation](./security-policy/2606-network-separation-relaxation/) — 망분리 완화 및 대체 보호조치 체계 구축
 법령 개정을 계기로 망분리 의무 대상 여부를 법적으로 재검토 → 표준 기반 대체 보호조치 통제영역 도출 → 현황 점검·취약점 식별 → 보완 계획 수립 및 잔여위험 판단
 
-### [automation/2606-cloud-risk-assessment](./automation/2606-cloud-risk-assessment/) — 클라우드 위험평가 자동화
-위험평가 산식(R=A×T×V)의 자산가치 근거인 클라우드 자산대장 정비 → 취약성 평가를 boto3 읽기 전용 자동화 도구로 자체 개발 → 자동 산정 결과와 정식 위험평가 보고서 체계의 정합성 점검
+### [automation](./automation/) — 자동화
+반복 업무나 수동 점검을 스크립트·웹앱으로 자동화한 프로젝트
 
-### [automation/2512-security-awareness-training](./automation/2512-security-awareness-training/) — 인터랙티브 사내 정보보안 교육 웹앱
-문서·슬라이드 배포 대신 실습·퀴즈로 진행하는 인터랙티브 교육을 Google Apps Script + HTML/CSS/JS로 개발 · [인터랙티브 데모](https://heinz-walker.github.io/project/security-training/)
+- [인터랙티브 사내 정보보안 교육 웹앱](./automation/2512-security-awareness-training/) — 문서·슬라이드 배포 대신 실습·퀴즈로 진행하는 인터랙티브 교육을 Google Apps Script + HTML/CSS/JS로 개발했다. [인터랙티브 데모](https://heinz-walker.github.io/project/security-training/)
+- [전자결재·보안 이벤트 슬랙 알림 봇](./automation/2603-approval-alert-bot/) — 결재 시스템이 보내는 메일을 입력으로 삼아 JSON 규칙 DSL로 매칭하고, 담당자를 멘션한 슬랙 메시지(승인·반려·문서 열기 버튼 포함)로 라우팅했다. 비개발자용 브라우저 규칙 빌더와 오프라인 테스트 하니스를 함께 만들었다.
+- [클라우드 위험평가 자동화](./automation/2606-cloud-risk-assessment/) — 위험평가 산식(R=A×T×V)의 자산가치 근거인 클라우드 자산대장을 정비하고, 취약성 평가를 boto3 읽기 전용 도구로 자체 개발해 자동 산정 결과와 정식 위험평가 보고서 체계의 정합성을 점검했다.
