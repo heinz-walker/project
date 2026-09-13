@@ -8,6 +8,8 @@
 ### [network](./network/) — 네트워크
 AWS 환경 네트워크 아키텍처 설계·운영
 
+- [SG-to-SG 체이닝 기반 최소권한 네트워크 통제 설계](./network/sg-to-sg-access-control/) — CIDR/전체허용 기반이던 보안그룹 정책을 SG 간 참조 기반 최소권한 통제로 전환하는 설계를 검토했다. 이 검토가 이후 아래 표준 아키텍처로 발전했다.
+
 - **[아키텍처 표준화](./network/architecture-standardization/)** — AWS Network Firewall 도입을 중심으로 Dev 환경 진단·재구축으로 표준 정립 → Stage/Live 적용 → Live 컷오버 시도·롤백 → Stage 운영 개선
 
   1. [Dev 환경 진단 및 재구축](./network/architecture-standardization/01-dev-environment-migration.md) — 워크로드가 없는 Dev 환경에서 표준 아키텍처를 실제로 구축·검증하며 회사 표준을 정립했다.
@@ -26,15 +28,23 @@ AWS 환경 네트워크 아키텍처 설계·운영
   5. [애플리케이션 헬스체크 근본원인 조사](./network/cross-region-migration/05-application-healthcheck-root-cause.md) — Auto Scaling Group 전환 이후 발생한 헬스체크 실패를 인스턴스 직접 접속으로 조사해 두 가지 근본 원인을 규명했다.
   6. [패치 자동화 후속조치](./network/cross-region-migration/06-patch-automation-followup.md) — 이관 과정에서 발견한 Bastion 인스턴스의 장기 미패치 문제를, 아웃바운드를 다시 열지 않고 Patch Manager로 해결한 과정을 다뤘다.
 
-### [poc/security-review](./poc/security-review/) — PoC·벤더 검토
+### [poc](./poc/) — PoC·벤더 검토
 솔루션 도입 전 후보 비교·검증
 
-- [DLP 솔루션 도입 평가](./poc/security-review/dlp-adoption/) — 후보 조사 → 1차 정량 평가 → 평가 방법론 자체 검증·개정 → 상위 후보 재검증(PoC) → 가격 대비 종합 판단으로 최종 선정
+- [DLP 솔루션 도입 평가](./poc/dlp-adoption/) — 후보 조사 → 1차 정량 평가 → 평가 방법론 자체 검증·개정 → 상위 후보 재검증(PoC) → 가격 대비 종합 판단으로 최종 선정
+
+### [security-assessment](./security-assessment/) — 보안 현황 점검
+운영 중인 시스템·서비스의 보안 설정 현황을 점검하고 근본원인을 추적하는 프로젝트
+
+- [Slack 워크스페이스 보안 현황 점검](./security-assessment/slack/) — 관리자 콘솔 점검 중 외부 협업 기능이 승인 없이 확산된 구조적 원인을 설정 화면 교차 확인으로 규명하고, 계정 인증 이중화 공백을 함께 찾았다
+- [Google Workspace 보안 현황 점검](./security-assessment/gws/) — 점검 시작과 동시에 확인된 관리 권한 제약의 원인을 조직 구조까지 추적하고, 제한된 권한 안에서도 확인 가능한 범위부터 분석해 우선순위 조치안을 보고했다
 
 ### [security-policy](./security-policy/) — 보안 정책·체계
 법령 개정이나 조직 변화에 따른 보안 정책·통제 체계 수립
 
 - [망분리 완화 및 대체 보호조치 체계 구축](./security-policy/network-separation-relaxation/) — 법령 개정을 계기로 망분리 의무 대상 여부를 법적으로 재검토 → 표준 기반 대체 보호조치 통제영역 도출 → 현황 점검·취약점 식별 → 보완 계획 수립 및 잔여위험 판단
+- [제로트러스트 기반 하이브리드 보안 아키텍처 제안](./security-policy/zerotrust-hybrid-architecture/) — 망분리 완화 이후에도 보안 수준을 유지하기 위해, 실제 접속 통제 취약 사례를 근거로 인증·접근 체계를 신원·단말·정책 기반 상시 검증 모델로 재설계할 것을 제안
+- [바이브 코딩 보안 가드레일 표준(안) 수립](./security-policy/vibe-coding-guardrails/) — AI 코드 생성 도구 사용 중 생기는 위험 경로(민감정보 노출, 프롬프트 인젝션, 과도한 에이전트 권한 등)를 먼저 정리하고, 경로마다 대응하는 기술적 가드레일과 보안 프롬프트 표준을 매칭해 제안
 
 ### [automation](./automation/) — 자동화
 반복 업무나 수동 점검을 스크립트·웹앱으로 자동화한 프로젝트
