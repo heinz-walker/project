@@ -19,6 +19,7 @@ AWS 환경 네트워크 아키텍처 설계·운영
   6. [Stage 환경 표준 적용 이후 운영 개선](./network/architecture-standardization/06-stage-infra-improvement.md) — 표준 적용 후 Stage를 운영하며 드러난 후속 문제 세 가지(배포 경로 정리, 방화벽 규칙 평가 순서 결함, ALB 서브넷 분리)를 다뤘다.
   7. [Live 인프라 재조사와 방화벽 인라인 재전환](./network/architecture-standardization/07-live-infra-recheck-and-inline-cutover.md) — 롤백 이후 Live와 Stage를 직접 조회해 diff를 새로 만들고, 사전 작업과 점검 당일 작업을 분리해 방화벽 인라인을 다시 전환했다.
   8. [공용 SG 변경이 외부 연동 수신을 막은 사고 영향 분석](./network/architecture-standardization/08-shared-sg-change-and-partner-callback-outage.md) — 관리자용·외부 연동용 ALB가 공유하던 SG의 인바운드 삭제로 파트너 콜백이 51시간 막힌 영향을 로그로 추정하고 재발 방지 항목을 정리했다.
+  9. [Dev 환경 표준 적용과 공유 방화벽 정책 오염 발견](./network/architecture-standardization/09-dev-standard-rollout-and-shared-firewall-policy.md) — Stage 표준을 Dev에 옮기던 중 Dev/Stage가 방화벽 정책 전체를 공유해 Dev 트래픽이 차단되던 것을 발견해 분리했다.
 
 - **[리전 간 인프라 이관](./network/cross-region-migration/)** — IaC 구조 설계 검토 → 이관 계획 수립 → 네트워크 기반 리소스 Import 실행 → 재검증으로 드러난 누락 발견·수정 → 애플리케이션 헬스체크 근본원인 조사 → 파생된 보안 후속조치(패치 자동화)
 
