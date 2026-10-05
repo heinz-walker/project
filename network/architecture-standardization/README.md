@@ -16,6 +16,8 @@
 4. **[Live 환경 적용 계획](./04-live-environment-migration-plan.md)** — Network Firewall 리소스 자체가 없던 Live 환경에 신규로 도입하는 계획. Stage보다 더 많은 외부 연결(VPC Peering)을 고려해야 했다.
 5. **[Live 방화벽 인라인 전환 시도와 롤백](./05-live-cutover-attempt-and-rollback.md)** — 4번 계획을 실제 트래픽 위에서 실행한 컷오버 시도. 사전 작업까지는 계획대로 진행했으나 점검 당일 원인 불명 장애가 겹쳐, 안전을 우선해 방화벽 라우팅만 롤백하고 점검을 종료했다.
 6. **[Stage 환경 표준 적용 이후 운영 개선](./06-stage-infra-improvement.md)** — 3번에서 표준을 적용한 Stage 환경을 운영하며 드러난 후속 문제 세 가지(배포 경로 정리, 방화벽 규칙 평가 순서 결함, ALB 서브넷 분리)를 다뤘다.
+7. **[Live 인프라 재조사와 방화벽 인라인 재전환](./07-live-infra-recheck-and-inline-cutover.md)** — 5번 롤백 이후 계획서를 고치는 대신 Live와 Stage를 직접 조회해 diff를 새로 만들고, 서비스 영향 없는 작업을 사전에 끝낸 뒤 점검 당일에는 ALB 이관과 라우팅 전환만 수행했다.
+8. **[공용 SG 변경이 외부 연동 수신을 막은 사고 영향 분석](./08-shared-sg-change-and-partner-callback-outage.md)** — 7번 점검 직후 관리자용·외부 연동용 ALB가 공유하던 SG의 인바운드가 삭제되어 파트너 콜백 수신이 51시간 막혔다. 로그만으로 영향 범위와 파트너별 회복 여부를 추정하고 재발 방지 항목을 정리했다.
 
 ---
 *회사명, 계정/리소스 식별자(계정 ID, VPC/Subnet/NAT/Endpoint ID, IP 등), 내부 서비스명 등은 포함하지 않았습니다.*

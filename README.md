@@ -9,7 +9,7 @@ AWS 환경 네트워크 아키텍처 설계·운영
 
 - [SG-to-SG 체이닝 기반 최소권한 네트워크 통제 설계](./network/sg-to-sg-access-control/) — CIDR/전체허용 기반이던 보안그룹 정책을 SG 간 참조 기반 최소권한 통제로 전환하는 설계를 검토했다. 이 검토가 이후 아래 표준 아키텍처로 발전했다.
 
-- **[아키텍처 표준화](./network/architecture-standardization/)** — AWS Network Firewall 도입을 중심으로 Dev 환경 진단·재구축으로 표준 정립 → Stage/Live 적용 → Live 컷오버 시도·롤백 → Stage 운영 개선
+- **[아키텍처 표준화](./network/architecture-standardization/)** — AWS Network Firewall 도입을 중심으로 Dev 환경 진단·재구축으로 표준 정립 → Stage/Live 적용 → Live 컷오버 시도·롤백 → Stage 운영 개선 → Live 재조사·재전환 → 공용 SG 변경 사고 분석
 
   1. [Dev 환경 진단 및 재구축](./network/architecture-standardization/01-dev-environment-migration.md) — 워크로드가 없는 Dev 환경에서 표준 아키텍처를 실제로 구축·검증하며 회사 표준을 정립했다.
   2. [Return Path 설계 원칙](./network/architecture-standardization/02-return-path-design-principle.md) — Dev 재구축 과정에서 겪은 라우팅 사고를 계기로, 방화벽 경유 구조에서 왕복 경로 설계가 왜 필수인지 정리한 개념 문서다.
@@ -17,6 +17,8 @@ AWS 환경 네트워크 아키텍처 설계·운영
   4. [Live 환경 적용 계획](./network/architecture-standardization/04-live-environment-migration-plan.md) — Network Firewall 리소스 자체가 없던 Live 환경에 신규로 도입하는 계획. Stage보다 더 많은 외부 연결(VPC Peering)을 고려해야 했다.
   5. [Live 방화벽 인라인 전환 시도와 롤백](./network/architecture-standardization/05-live-cutover-attempt-and-rollback.md) — Live 적용 계획을 실제 트래픽 위에서 실행한 컷오버 시도. 점검 당일 원인 불명 장애가 겹쳐, 안전을 우선해 방화벽 라우팅만 롤백하고 점검을 종료했다.
   6. [Stage 환경 표준 적용 이후 운영 개선](./network/architecture-standardization/06-stage-infra-improvement.md) — 표준 적용 후 Stage를 운영하며 드러난 후속 문제 세 가지(배포 경로 정리, 방화벽 규칙 평가 순서 결함, ALB 서브넷 분리)를 다뤘다.
+  7. [Live 인프라 재조사와 방화벽 인라인 재전환](./network/architecture-standardization/07-live-infra-recheck-and-inline-cutover.md) — 롤백 이후 Live와 Stage를 직접 조회해 diff를 새로 만들고, 사전 작업과 점검 당일 작업을 분리해 방화벽 인라인을 다시 전환했다.
+  8. [공용 SG 변경이 외부 연동 수신을 막은 사고 영향 분석](./network/architecture-standardization/08-shared-sg-change-and-partner-callback-outage.md) — 관리자용·외부 연동용 ALB가 공유하던 SG의 인바운드 삭제로 파트너 콜백이 51시간 막힌 영향을 로그로 추정하고 재발 방지 항목을 정리했다.
 
 - **[리전 간 인프라 이관](./network/cross-region-migration/)** — IaC 구조 설계 검토 → 이관 계획 수립 → 네트워크 기반 리소스 Import 실행 → 재검증으로 드러난 누락 발견·수정 → 애플리케이션 헬스체크 근본원인 조사 → 파생된 보안 후속조치(패치 자동화)
 
