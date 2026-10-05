@@ -30,6 +30,11 @@ AWS 환경 네트워크 아키텍처 설계·운영
   5. [애플리케이션 헬스체크 근본원인 조사](./network/cross-region-migration/05-application-healthcheck-root-cause.md) — Auto Scaling Group 전환 이후 발생한 헬스체크 실패를 인스턴스 직접 접속으로 조사해 두 가지 근본 원인을 규명했다.
   6. [패치 자동화 후속조치](./network/cross-region-migration/06-patch-automation-followup.md) — 이관 과정에서 발견한 Bastion 인스턴스의 장기 미패치 문제를, 아웃바운드를 다시 열지 않고 Patch Manager로 해결한 과정을 다뤘다.
 
+- **[비용 최적화](./network/cost-optimization/)** — 방화벽 표준화로 늘어난 네트워크 비용을 공식 단가 확인 → 실측 → 비용 추정 → 절감 여지 판단 순서로 분석(진행 중)
+
+  1. [Network Firewall·NAT Gateway 비용 구조 분석](./network/cost-optimization/01-nat-firewall-cost-structure.md) — NAT 요금 면제 조건을 실제 라우팅으로 검증하고, 실측으로 비용의 약 87%가 방화벽 엔드포인트 고정 시간당 요금임을 확인했다.
+  2. [Dev 방화벽 운영 방식별 비용 시나리오](./network/cost-optimization/02-dev-firewall-cost-scenarios.md) — 상시 트래픽이 필요 없는 Dev 방화벽의 운영 방식별 순절감(상시 off 약 85%, 업무시간만 on 약 60%)을 계산했다.
+
 ### [poc](./poc/) — PoC·벤더 검토
 솔루션 도입 전 후보 비교·검증
 
